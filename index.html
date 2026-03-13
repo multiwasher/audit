@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuditHub - Sistema de Gestão de Auditorias</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8fafc;
+  --white:#ffffff;
+  --slate50:#f8fafc;
+  --slate100:#f1f5f9;
+  --slate200:#e2e8f0;
+  --slate300:#cbd5e1;
+  --slate400:#94a3b8;
+  --slate500:#64748b;
+  --slate600:#475569;
+  --slate700:#334155;
+  --slate800:#1e293b;
+  --slate900:#0f172a;
+  --blue:#2563eb;
+  --blue-light:#eff6ff;
+  --emerald:#059669;
+  --emerald-light:#ecfdf5;
+  --amber:#d97706;
+  --amber-light:#fffbeb;
+  --rose:#e11d48;
+  --rose-light:#fff1f2;
+  --purple:#7c3aed;
+  --purple-light:#f5f3ff;
+  --r:24px;
+  --r-lg:32px;
+  --r-xl:40px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--slate900);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* HEADER */
+.header{background:var(--slate900);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.75rem;cursor:pointer;text-decoration:none}
+.logo-icon{background:var(--blue);width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;transition:transform .2s}
+.logo:hover .logo-icon{transform:rotate(12deg)}
+.logo-text{display:flex;flex-direction:column;line-height:1}
+.logo-name{font-size:17px;font-weight:900;color:#fff;letter-spacing:-.02em}
+.logo-name span{color:#60a5fa}
+.logo-sub{font-size:9px;font-weight:700;color:var(--slate500);letter-spacing:.25em;text-transform:uppercase;margin-top:2px}
+.header-back{display:flex;align-items:center;gap:.5rem;color:var(--slate400);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:.5rem 1rem;border-radius:10px;transition:all .15s}
+.header-back:hover{background:rgba(255,255,255,.1);color:#fff}
+.header-back svg{width:14px;height:14px}
+
+/* VIEWS */
+.view{display:none;animation:fadeUp .3s ease}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* MAIN CONTAINER */
+.container{max-width:1200px;margin:0 auto;padding:2.5rem 2rem}
+
+/* MENU CARDS */
+.menu-hero{margin-bottom:3rem}
+.menu-hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;letter-spacing:-.04em;font-style:italic;text-transform:uppercase;line-height:1;margin-bottom:.5rem}
+.menu-hero p{color:var(--slate400);font-weight:500;font-size:15px}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.menu-card{background:var(--white);border-radius:var(--r-xl);padding:2.5rem;border:1px solid var(--slate100);cursor:pointer;transition:all .25s;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.menu-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.menu-card-bg{position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;opacity:.5;transition:transform .4s}
+.menu-card:hover .menu-card-bg{transform:scale(1.4)}
+.menu-card-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:1.5rem;position:relative}
+.menu-card h2{font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:.5rem;position:relative}
+.menu-card p{font-size:13px;color:var(--slate400);line-height:1.6;margin-bottom:2rem;position:relative}
+.menu-card-cta{display:flex;align-items:center;gap:.4rem;font-size:10px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;position:relative}
+.menu-card-cta svg{width:12px;height:12px;transition:transform .2s}
+.menu-card:hover .menu-card-cta svg{transform:translateX(3px)}
+
+.card-blue .menu-card-bg{background:var(--blue-light)}
+.card-blue .menu-card-icon{background:var(--blue-light);color:var(--blue)}
+.card-blue h2{color:#1d4ed8}
+.card-blue .menu-card-cta{color:var(--blue)}
+.card-emerald .menu-card-bg{background:var(--emerald-light)}
+.card-emerald .menu-card-icon{background:var(--emerald-light);color:var(--emerald)}
+.card-emerald h2{color:#065f46}
+.card-emerald .menu-card-cta{color:var(--emerald)}
+.card-slate .menu-card-bg{background:var(--slate100)}
+.card-slate .menu-card-icon{background:var(--slate100);color:var(--slate700)}
+.card-slate h2{color:var(--slate800)}
+.card-slate .menu-card-cta{color:var(--slate600)}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:2rem}
+.page-header h2{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;letter-spacing:-.03em;font-style:italic;text-transform:uppercase;margin-bottom:.25rem}
+.page-header p{color:var(--slate400);font-size:13px;font-weight:500}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
+
+/* BTNS */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.25rem;border-radius:14px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;border:none;line-height:1}
+.btn:active{transform:scale(.97)}
+.btn-dark{background:var(--slate900);color:#fff}
+.btn-dark:hover{background:black}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.25)}
+.btn-blue:hover{background:#1d4ed8}
+.btn-emerald{background:var(--emerald);color:#fff;box-shadow:0 4px 14px rgba(5,150,105,.25)}
+.btn-emerald:hover{background:#047857}
+.btn-ghost{background:transparent;color:var(--slate500);border:1px solid var(--slate200)}
+.btn-ghost:hover{background:var(--slate50);color:var(--slate700)}
+.btn-danger-ghost{background:transparent;color:var(--slate300);border:none}
+.btn-danger-ghost:hover{color:var(--rose);background:var(--rose-light)}
+.btn-sm{padding:.4rem .85rem;font-size:12px}
+
+/* CARD BASE */
+.card{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--slate100);box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+
+/* TABLE */
+.table-wrap{overflow-x:auto}
+table.main-table{width:100%;border-collapse:collapse}
+table.main-table thead{background:var(--slate50);border-bottom:1px solid var(--slate100)}
+table.main-table th{padding:1rem 1.5rem;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.2em;color:var(--slate400);text-align:left}
+table.main-table td{padding:1rem 1.5rem;border-bottom:1px solid var(--slate50);vertical-align:middle;font-size:12px}
+table.main-table tr:last-child td{border-bottom:none}
+table.main-table tr:hover td{background:rgba(248,250,252,.6)}
+
+/* DEPT SELECTOR */
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.dept-card{background:var(--white);border:2px solid var(--slate100);border-radius:var(--r-lg);padding:1.75rem 1.5rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.dept-card:hover{border-color:var(--emerald);transform:translateY(-3px);box-shadow:0 12px 30px rgba(5,150,105,.12)}
+.dept-card.selected{border-color:var(--emerald);background:var(--emerald-light)}
+.dept-card-dot{position:absolute;top:-10px;right:-10px;width:50px;height:50px;border-radius:50%;background:var(--emerald-light);transition:transform .3s}
+.dept-card:hover .dept-card-dot,.dept-card.selected .dept-card-dot{transform:scale(3)}
+.dept-card-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.2em;color:var(--emerald);margin-bottom:.5rem;position:relative;z-index:2}
+.dept-card-name{font-size:22px;font-weight:900;letter-spacing:-.02em;color:var(--slate900);position:relative;line-height:1.1;z-index:2}
+.dept-card-arrow{position:absolute;bottom:1.25rem;right:1.25rem;width:32px;height:32px;background:var(--emerald);border-radius:8px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:#fff}
+.dept-card:hover .dept-card-arrow,.dept-card.selected .dept-card-arrow{opacity:1}
+
+/* QUESTION CARDS */
+.q-list{display:flex;flex-direction:column;gap:.75rem}
+.q-card{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--slate100);padding:1.75rem;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.q-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.q-header{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.75rem}
+.q-num{flex-shrink:0;background:var(--slate100);color:var(--slate500);font-size:10px;font-weight:900;font-family:'DM Mono',monospace;padding:.25rem .55rem;border-radius:6px;margin-top:2px}
+.q-text{font-size:13px;font-weight:700;color:var(--slate800);line-height:1.55;flex:1}
+.q-foco{display:inline-flex;align-items:center;gap:.25rem;background:var(--slate100);border:1px solid var(--slate200);border-radius:6px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);padding:3px 8px;margin-bottom:.75rem}
+.q-body{display:grid;grid-template-columns:1fr 160px;gap:1rem;align-items:start}
+.ev-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--slate400);margin-bottom:.4rem}
+.ev-textarea{width:100%;background:var(--slate50);border:1px solid var(--slate100);border-radius:12px;padding:.75rem 1rem;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--slate700);resize:vertical;min-height:72px;transition:all .15s;outline:none}
+.ev-textarea::placeholder{color:var(--slate300)}
+.ev-textarea:focus{background:var(--white);border-color:var(--slate300);box-shadow:0 0 0 4px rgba(37,99,235,.06)}
+.q-btns{display:flex;flex-direction:column;gap:.5rem}
+.q-btns-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--slate400);margin-bottom:.3rem}
+.tog{padding:.55rem .5rem;border-radius:10px;border:2px solid var(--slate100);background:var(--white);font-size:11px;font-weight:900;font-family:'DM Sans',sans-serif;color:var(--slate300);cursor:pointer;transition:all .15s;text-align:center;letter-spacing:.04em}
+.tog:hover{border-color:var(--slate300);color:var(--slate500)}
+.tog.t-om{background:var(--amber);border-color:var(--amber);color:#fff;box-shadow:0 4px 12px rgba(217,119,6,.3);transform:scale(1.02)}
+.tog.t-nc{background:var(--rose);border-color:var(--rose);color:#fff;box-shadow:0 4px 12px rgba(225,29,72,.3);transform:scale(1.02)}
+.tog.t-ok{background:var(--emerald);border-color:var(--emerald);color:#fff;box-shadow:0 4px 12px rgba(5,150,105,.3);transform:scale(1.02)}
+
+/* REPORT */
+.report-wrap{background:var(--white);border-radius:var(--r-xl);border:1px solid var(--slate100);padding:3rem;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.report-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:8px solid var(--slate900);padding-bottom:2rem;margin-bottom:2rem;flex-wrap:wrap;gap:1.5rem}
+.report-title{font-size:clamp(3rem,8vw,5rem);font-weight:900;letter-spacing:-.05em;text-transform:uppercase;font-style:italic;line-height:1}
+.report-dept-badge{background:var(--slate900);color:#fff;padding:.75rem 2rem;border-radius:16px;font-size:2rem;font-weight:900;text-transform:uppercase;letter-spacing:-.02em}
+.sign-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4rem;margin-top:4rem;padding-top:2rem}
+.sign-line{border-bottom:3px solid var(--slate900);padding-bottom:1rem;margin-bottom:.75rem}
+.sign-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.25em;color:var(--slate900)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+@media(min-width:640px){.modal-overlay{align-items:center;padding:1.5rem}}
+.modal{background:var(--white);width:100%;max-width:540px;border-radius:28px 28px 0 0;padding:0;overflow:hidden;transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.3,.64,1);max-height:92vh;display:flex;flex-direction:column}
+@media(min-width:640px){.modal{border-radius:28px;transform:translateY(20px);max-height:88vh}}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-handle{width:40px;height:4px;background:var(--slate200);border-radius:99px;margin:12px auto 0;flex-shrink:0}
+@media(min-width:640px){.modal-handle{display:none}}
+.modal-header{padding:1.25rem 1.5rem 1rem;border-bottom:1px solid var(--slate100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-header h3{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--slate100);color:var(--slate500);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.modal-close:hover{background:var(--slate200);color:var(--slate800)}
+.modal-body{padding:1.25rem 1.5rem;overflow-y:auto;flex:1}
+.modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--slate100);display:flex;gap:.75rem;flex-shrink:0;background:var(--white)}
+.modal-footer .btn{flex:1;justify-content:center;padding:.75rem}
+.mform-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.mform-grid.full{grid-template-columns:1fr}
+.mfield{display:flex;flex-direction:column;gap:5px}
+.mfield label{font-size:11px;font-weight:700;color:var(--slate500);letter-spacing:.04em;text-transform:uppercase}
+.mfield input,.mfield select,.mfield textarea{background:var(--slate50);border:1.5px solid var(--slate100);border-radius:12px;padding:.65rem .9rem;font-size:14px;color:var(--slate900);font-family:'DM Sans',sans-serif;transition:border .15s;width:100%;outline:none}
+.mfield input:focus,.mfield select:focus,.mfield textarea:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 4px rgba(37,99,235,.08)}
+.mfield textarea{resize:vertical;min-height:80px}
+
+.empty-state{text-align:center;padding:4rem 2rem}
+.empty-state .ei{font-size:3rem;margin-bottom:1rem;opacity:.3}
+.empty-state p{font-size:13px;color:var(--slate400);font-weight:600}
+
+@media(max-width:640px){
+  .q-body{grid-template-columns:1fr}
+  .menu-grid{grid-template-columns:1fr}
+  .sign-grid{grid-template-columns:1fr}
+  .container{padding:1.5rem 1rem}
+}
+@media print{
+  .no-print{display:none!important}
+  .header{display:none!important}
+  body{background:white!important}
+  .container{padding:2rem!important;max-width:100%!important}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo" onclick="goHome()">
+    <div class="logo-icon">📋</div>
+    <div class="logo-text">
+      <span class="logo-name">Audit<span>Hub</span></span>
+      <span class="logo-sub">Sistema de Gestão</span>
+    </div>
+  </div>
+  <button class="header-back no-print" id="back-btn" style="display:none" onclick="goHome()">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
+    Painel Principal
+  </button>
+</header>
+
+<!-- DASHBOARD -->
+<div class="view active" id="view-menu">
+  <div class="container">
+    <div class="menu-hero">
+      <h1>Bem-vindo ao AuditHub</h1>
+      <p>Controlo total sobre requisitos de conformidade e qualidade.</p>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-card card-blue" onclick="goTo('planeamento')">
+        <div class="menu-card-bg"></div>
+        <div class="menu-card-icon">📅</div>
+        <h2>Planeamento</h2>
+        <p>Agende auditorias, designe auditores e defina datas para cada departamento.</p>
+        <div class="menu-card-cta">Ver agenda <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
+      </div>
+      <div class="menu-card card-slate" onclick="goTo('questoes')">
+        <div class="menu-card-bg"></div>
+        <div class="menu-card-icon">🗂️</div>
+        <h2>Questões</h2>
+        <p>Gerencie o banco de questões por departamento. Defina a base das auditorias.</p>
+        <div class="menu-card-cta">Configurar banco <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
+      </div>
+      <div class="menu-card card-emerald" onclick="goTo('selecionar')">
+        <div class="menu-card-bg"></div>
+        <div class="menu-card-icon">🔍</div>
+        <h2>Execução</h2>
+        <p>Inicie a verificação no terreno com as questões configuradas.</p>
+        <div class="menu-card-cta">Começar agora <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLANEAMENTO -->
+<div class="view" id="view-planeamento">
+  <div class="container">
+    <div class="page-header">
+      <h2>Planeamento</h2>
+      <p>Agende e gerencie o cronograma de auditorias</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-dark" onclick="openPlanModal()">+ Agendar Auditoria</button>
+    </div>
+    <div id="listaIntro"></div>
+  </div>
+</div>
+
+<!-- MODAL: PLANEAMENTO -->
+<div class="modal-overlay" id="plan-modal" onclick="if(event.target === this) closePlanModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Nova Auditoria</h3>
+      <button class="modal-close" onclick="closePlanModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="formIntro" onsubmit="salvarIntro(event)">
+        <div class="mform-grid">
+          <div class="mfield">
+            <label>Departamento *</label>
+            <select id="departamento" required>
+              <option value="">-- Selecione --</option>
+              <option value="DCO">DCO — Compras</option>
+              <option value="DEN">DEN — Engenharia</option>
+              <option value="DATLOG">DATLOG — Pós-Venda (Logística)</option>
+              <option value="DATTECH">DATTECH — Pós-Venda (Tech)</option>
+              <option value="DPR">DPR — Produção</option>
+              <option value="DLO">DLO — Logística</option>
+              <option value="DSQA">DSQA — Sistema Gestão</option>
+              <option value="DCM">DCM — Comercial</option>
+            </select>
+          </div>
+          <div class="mfield">
+            <label>Data *</label>
+            <input type="date" id="dataAuditoria" required/>
+          </div>
+        </div>
+        <div class="mform-grid">
+          <div class="mfield">
+            <label>Auditor Coordenador *</label>
+            <input type="text" id="auditorCoord" required/>
+          </div>
+          <div class="mfield">
+            <label>Auditor *</label>
+            <input type="text" id="auditor" required/>
+          </div>
+        </div>
+        <div class="mform-grid">
+          <div class="mfield">
+            <label>Auditado *</label>
+            <input type="text" id="auditado" required/>
+          </div>
+          <div class="mfield">
+            <label>Registado Por *</label>
+            <input type="text" id="registadoPor" required/>
+          </div>
+        </div>
+        <div class="mform-grid">
+          <div class="mfield">
+            <label>Hora Prevista *</label>
+            <input type="time" id="horaPrevista" required/>
+          </div>
+          <div class="mfield">
+            <label>Hora Real</label>
+            <input type="time" id="horaAuditoria"/>
+          </div>
+        </div>
+        <div class="mform-grid full">
+          <div class="mfield">
+            <label>Colaboradores Contactados</label>
+            <textarea id="colaboradores" placeholder="Separados por vírgula..."></textarea>
+          </div>
+        </div>
+        <div class="mform-grid full">
+          <div class="mfield">
+            <label>Requisitos</label>
+            <textarea id="requisitos" placeholder="Requisitos a verificar..."></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closePlanModal()">Cancelar</button>
+      <button class="btn btn-dark" onclick="document.getElementById('formIntro').dispatchEvent(new Event('submit'))">+ Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTÕES -->
+<div class="view" id="view-questoes">
+  <div class="container">
+    <div class="page-header">
+      <h2>Base de Questões</h2>
+      <p>Gerencie as questões específicas por departamento</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-dark" onclick="openQuestModal()">+ Nova Questão</button>
+    </div>
+    <div id="listaQuestoes"></div>
+  </div>
+</div>
+
+<!-- MODAL: QUESTÃO -->
+<div class="modal-overlay" id="quest-modal" onclick="if(event.target === this) closeQuestModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Nova Questão</h3>
+      <button class="modal-close" onclick="closeQuestModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="formQuestao" onsubmit="adicionarQuestao(event)">
+        <div class="mform-grid full">
+          <div class="mfield">
+            <label>Departamento *</label>
+            <select id="deptQuestao" required>
+              <option value="">-- Selecione --</option>
+              <option value="DCO">DCO — Compras</option>
+              <option value="DEN">DEN — Engenharia</option>
+              <option value="DATLOG">DATLOG — Pós-Venda (Logística)</option>
+              <option value="DATTECH">DATTECH — Pós-Venda (Tech)</option>
+              <option value="DPR">DPR — Produção</option>
+              <option value="DLO">DLO — Logística</option>
+              <option value="DSQA">DSQA — Sistema Gestão</option>
+              <option value="DCM">DCM — Comercial</option>
+            </select>
+          </div>
+        </div>
+        <div class="mform-grid full">
+          <div class="mfield">
+            <label>Questão de Auditoria *</label>
+            <textarea id="textoQuestao" required placeholder="Digite a questão..."></textarea>
+          </div>
+        </div>
+        <div class="mform-grid full">
+          <div class="mfield">
+            <label>Foco / Requisito</label>
+            <textarea id="focoRequisito" placeholder="Descreva o foco..."></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeQuestModal()">Cancelar</button>
+      <button class="btn btn-dark" onclick="document.getElementById('formQuestao').dispatchEvent(new Event('submit'))">+ Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SELECIONAR DEPT -->
+<div class="view" id="view-selecionar">
+  <div class="container">
+    <div class="page-header">
+      <h2>Executar Auditoria</h2>
+      <p>Seleciona o departamento para iniciar o registo</p>
+    </div>
+    <div class="dept-grid" id="dept-grid"></div>
+    <div id="dept-empty" class="empty-state"><div class="ei">🏢</div><p>Nenhum departamento com questões.</p></div>
+  </div>
+</div>
+
+<!-- AUDITORIA -->
+<div class="view" id="view-auditoria">
+  <div class="container">
+    <div class="page-header">
+      <h2 id="audit-title">Execução de Auditoria</h2>
+      <p id="audit-desc">Departamento</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-emerald no-print" onclick="goTo('relatorio')">📊 Concluir Relatório</button>
+    </div>
+    <div class="q-list" id="q-list"></div>
+    <div id="q-empty" class="empty-state"><div class="ei">🔍</div><p>Seleciona um departamento.</p></div>
+  </div>
+</div>
+
+<!-- RELATÓRIO -->
+<div class="view" id="view-relatorio">
+  <div class="container">
+    <div class="toolbar no-print" style="margin-bottom:1.5rem">
+      <button class="btn btn-ghost" onclick="goTo('auditoria')">← Voltar</button>
+      <button class="btn btn-blue" onclick="finalizarAuditoria()">✓ Finalizar Auditoria</button>
+    </div>
+    <div class="report-wrap" id="rel-content"></div>
+  </div>
+</div>
+
+<script>
+const SHEET_ID = '1bMoWDD2mHdzgFtJijQld-GHCcmm9rYpZ996Z2JIOMgk';
+const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxIDIhZAKGbIcr2L4bJeEd__F2p27ly1aOfMJSphggznOEsp-P4ccp-wahyDTHhkLJ/exec';
+
+const DEPARTAMENTOS = {
+  'DCO': 'Compras',
+  'DEN': 'Engenharia',
+  'DATLOG': 'Pós-Venda (Logística)',
+  'DATTECH': 'Pós-Venda (Tech)',
+  'DPR': 'Produção',
+  'DLO': 'Logística',
+  'DSQA': 'Sistema Gestão Integrada',
+  'DCM': 'Comercial'
+};
+
+let dados = {
+  introPlaneamentos: [],
+  questoes: [],
+  auditorias: [],
+  auditoriasRegistadas: [],
+};
+
+let deptAtual = null;
+
+function goHome() { goTo('menu'); }
+function goTo(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  document.getElementById('back-btn').style.display = view === 'menu' ? 'none' : 'flex';
+  
+  if (view === 'questoes') renderQuestoes();
+  if (view === 'planeamento') renderPlaneamentos();
+  if (view === 'selecionar') renderDeptos();
+}
+
+// PLANEAMENTO
+function openPlanModal() { document.getElementById('plan-modal').classList.add('open'); }
+function closePlanModal(e) { 
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('plan-modal').classList.remove('open'); 
+}
+
+async function salvarIntro(e) {
+  e.preventDefault();
+  const data = new Date();
+  const ano = data.getFullYear();
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const dia = String(data.getDate()).padStart(2, '0');
+  const sequencia = String(dados.introPlaneamentos.length + 1).padStart(3, '0');
+  const idGerado = `AUD-${ano}${mes}${dia}-${sequencia}`;
+
+  const novoIntro = {
+    id: idGerado,
+    departamento: document.getElementById('departamento').value,
+    auditorCoord: document.getElementById('auditorCoord').value,
+    auditor: document.getElementById('auditor').value,
+    auditado: document.getElementById('auditado').value,
+    registadoPor: document.getElementById('registadoPor').value,
+    colaboradores: document.getElementById('colaboradores').value,
+    requisitos: document.getElementById('requisitos').value,
+    horaPrevista: document.getElementById('horaPrevista').value,
+    horaAuditoria: document.getElementById('horaAuditoria').value,
+    dataAuditoria: document.getElementById('dataAuditoria').value,
+    dataCriacao: new Date().toISOString()
+  };
+
+  dados.introPlaneamentos.push(novoIntro);
+  guardarDados();
+
+  await enviarParaAppScript('salvarIntro', novoIntro);
+
+  document.getElementById('formIntro').reset();
+  closePlanModal();
+  renderPlaneamentos();
+  alert(`Planeamento guardado! ID: ${idGerado}`);
+}
+
+function renderPlaneamentos() {
+  const container = document.getElementById('listaIntro');
+  
+  if (dados.introPlaneamentos.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="ei">📅</div><p>Sem auditorias planeadas.</p></div>';
+    return;
+  }
+
+  container.innerHTML = dados.introPlaneamentos.map(intro => `
+    <div class="card" style="padding:1.5rem;margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-weight:900;font-size:15px;margin-bottom:.5rem">${intro.id} - ${intro.departamento}</div>
+          <div style="font-size:12px;color:var(--slate500);margin-bottom:.75rem">
+            <div><strong>Auditor Coord:</strong> ${intro.auditorCoord}</div>
+            <div><strong>Auditor:</strong> ${intro.auditor}</div>
+            <div><strong>Data:</strong> ${intro.dataAuditoria} ${intro.horaPrevista}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn btn-ghost btn-sm" onclick="window.alert('Editar em construção')">✎</button>
+          <button class="btn btn-danger-ghost btn-sm" onclick="removerIntro('${intro.id}')">🗑</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function removerIntro(id) {
+  dados.introPlaneamentos = dados.introPlaneamentos.filter(i => i.id !== id);
+  guardarDados();
+  renderPlaneamentos();
+}
+
+// QUESTÕES
+function openQuestModal() { document.getElementById('quest-modal').classList.add('open'); }
+function closeQuestModal() { document.getElementById('quest-modal').classList.remove('open'); }
+
+function renderQuestoes() {
+  const container = document.getElementById('listaQuestoes');
+  if (dados.questoes.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="ei">🗂️</div><p>Nenhuma questão registada.</p></div>';
+    return;
+  }
+
+  const depts = [...new Set(dados.questoes.map(q => q.departamento))].sort();
+  container.innerHTML = depts.map(dept => {
+    const questoesDept = dados.questoes.filter(q => q.departamento === dept);
+    return `
+      <div style="margin-bottom:2rem">
+        <h3 style="font-size:16px;font-weight:900;margin-bottom:1rem;color:var(--slate800)">${dept} — ${DEPARTAMENTOS[dept]}</h3>
+        <div class="q-list">
+          ${questoesDept.map((q, i) => `
+            <div class="q-card">
+              <div class="q-header">
+                <div class="q-num">Q${i+1}</div>
+                <div class="q-text">${q.questao}</div>
+              </div>
+              <div class="q-foco">${q.foco}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function adicionarQuestao(e) {
+  e.preventDefault();
+  const dept = document.getElementById('deptQuestao').value;
+  const texto = document.getElementById('textoQuestao').value;
+  const foco = document.getElementById('focoRequisito').value;
+  
+  if (!dept || !texto) { alert('Preenche campos obrigatórios'); return; }
+  
+  dados.questoes.push({
+    id: 'Q' + (dados.questoes.length + 1),
+    departamento: dept,
+    questao: texto,
+    foco: foco || 'Sem especificação'
+  });
+  
+  guardarDados();
+  await enviarParaAppScript('adicionarQuestao', { departamento: dept, investigacao: texto, foco: foco });
+  
+  document.getElementById('formQuestao').reset();
+  closeQuestModal();
+  renderQuestoes();
+  alert('Questão adicionada!');
+}
+
+// DEPARTAMENTOS
+function renderDeptos() {
+  const deptos = Object.keys(DEPARTAMENTOS).filter(d => 
+    dados.questoes.some(q => q.departamento === d)
+  );
+  
+  const container = document.getElementById('dept-grid');
+  if (deptos.length === 0) {
+    document.getElementById('dept-empty').style.display = 'block';
+    container.innerHTML = '';
+    return;
+  }
+  document.getElementById('dept-empty').style.display = 'none';
+  
+  container.innerHTML = deptos.map(d => `
+    <div class="dept-card" onclick="iniciarAuditoria('${d}')">
+      <div class="dept-card-dot"></div>
+      <div class="dept-card-label">${d}</div>
+      <div class="dept-card-name">${DEPARTAMENTOS[d]}</div>
+      <div class="dept-card-arrow">→</div>
+    </div>
+  `).join('');
+}
+
+function iniciarAuditoria(dept) {
+  deptAtual = dept;
+  document.getElementById('audit-title').textContent = DEPARTAMENTOS[dept];
+  document.getElementById('audit-desc').textContent = dept;
+  renderQuestoesPorDept();
+  goTo('auditoria');
+}
+
+let ncSelecionados = {};
+
+function renderQuestoesPorDept() {
+  const questoes = dados.questoes.filter(q => q.departamento === deptAtual);
+  const container = document.getElementById('q-list');
+  
+  if (questoes.length === 0) {
+    document.getElementById('q-empty').style.display = 'block';
+    container.innerHTML = '';
+    return;
+  }
+  document.getElementById('q-empty').style.display = 'none';
+  
+  container.innerHTML = questoes.map((q, i) => `
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Q${i+1}</div>
+        <div class="q-text">${q.questao}</div>
+      </div>
+      <div class="q-foco">${q.foco}</div>
+      <div class="q-body">
+        <div>
+          <div class="ev-label">Constatação / Evidência</div>
+          <textarea class="ev-textarea" id="ev_${q.id}" placeholder="..."></textarea>
+          <div class="ev-label" style="margin-top:.75rem">Observação (OM)</div>
+          <textarea class="ev-textarea" id="om_${q.id}" placeholder="..."></textarea>
+        </div>
+        <div class="q-btns">
+          <div class="q-btns-label">NC</div>
+          <button class="tog" onclick="setNC('${q.id}', 'OK', this)">✓ OK</button>
+          <button class="tog" onclick="setNC('${q.id}', 'OM', this)">⚠ OM</button>
+          <button class="tog" onclick="setNC('${q.id}', 'NC', this)">✗ NC</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setNC(qid, tipo, btn) {
+  ncSelecionados[qid] = tipo;
+  btn.parentElement.querySelectorAll('.tog').forEach(b => b.classList.remove('t-om', 't-nc', 't-ok'));
+  btn.classList.add(tipo === 'OM' ? 't-om' : tipo === 'NC' ? 't-nc' : 't-ok');
+}
+
+async function finalizarAuditoria() {
+  const questoes = dados.questoes.filter(q => q.departamento === deptAtual);
+  const registos = [];
+  
+  questoes.forEach(q => {
+    const nc = ncSelecionados[q.id] || 'OK';
+    registos.push({
+      id: `AUD-${new Date().toISOString().slice(0,10).replace(/-/g,'')}`,
+      departamento: deptAtual,
+      investigacao: q.questao,
+      foco: q.foco,
+      evidencia: document.getElementById('ev_' + q.id).value,
+      om: document.getElementById('om_' + q.id).value,
+      nc: nc
+    });
+  });
+  
+  dados.auditoriasRegistadas.push(...registos);
+  guardarDados();
+  
+  const reportHtml = `
+    <div class="report-head">
+      <div>
+        <div class="report-title">RELATÓRIO DE AUDITORIA</div>
+        <div style="font-size:9px;color:var(--slate400);margin-top:.5rem;text-transform:uppercase;font-weight:900">Departamento</div>
+      </div>
+      <div class="report-dept-badge">${deptAtual}</div>
+    </div>
+    <div style="margin-bottom:2rem">
+      ${registos.map(r => `
+        <div style="padding:1.5rem 0;border-bottom:1px solid var(--slate100)">
+          <div style="font-weight:700;margin-bottom:.5rem">${r.investigacao}</div>
+          <div style="font-size:12px;color:var(--slate500);margin-bottom:1rem">${r.foco}</div>
+          <div style="padding:.75rem;background:var(--slate50);border-radius:8px;font-size:12px;color:var(--slate600);margin-bottom:.75rem">${r.evidencia || '—'}</div>
+          <div style="display:flex;gap:1rem;">
+            <span class="tog t-${r.nc === 'OM' ? 'om' : r.nc === 'NC' ? 'nc' : 'ok'}" style="padding:.4rem .8rem;font-size:11px">${r.nc}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="sign-grid">
+      <div><input type="text" placeholder="Auditor" style="border:none;border-bottom:1px solid #000;width:100%;padding:.5rem 0;font-size:12px"/><div class="sign-label">Auditor</div></div>
+      <div><input type="text" placeholder="Auditado" style="border:none;border-bottom:1px solid #000;width:100%;padding:.5rem 0;font-size:12px"/><div class="sign-label">Auditado</div></div>
+      <div><input type="text" placeholder="Coordenador" style="border:none;border-bottom:1px solid #000;width:100%;padding:.5rem 0;font-size:12px"/><div class="sign-label">Coordenador</div></div>
+    </div>
+  `;
+  
+  document.getElementById('rel-content').innerHTML = reportHtml;
+  goTo('relatorio');
+}
+
+// DADOS
+function guardarDados() { localStorage.setItem('auditData', JSON.stringify(dados)); }
+function carregarDados() {
+  const stored = localStorage.getItem('auditData');
+  if (stored) dados = JSON.parse(stored);
+}
+
+async function enviarParaAppScript(operacao, dados_) {
+  try {
+    await fetch(APPSCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({operacao, ...dados_})
+    });
+  } catch(e) { console.log('AppScript indisponível'); }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  carregarDados();
+});
+</script>
+</body>
+</html>

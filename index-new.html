@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Auditorias - Redesign</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e4e5eb 0%, #ede9f1 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #0f1e3d 0%, #1a2d4d 100%);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 15px;
+            margin-bottom: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-box {
+            background: #4A7FFF;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            color: white;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        #statusSheet {
+            font-size: 13px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-principal {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: none;
+            transition: all 0.3s;
+        }
+
+        .btn-principal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-principal.show {
+            display: block;
+        }
+
+        /* HERO SECTION */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero-title {
+            font-size: 42px;
+            font-weight: 900;
+            color: #0f1e3d;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: #8a93a8;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        /* DASHBOARD PRINCIPAL */
+        .dashboard-principal {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card-main {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px 45px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(74, 127, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .card-main:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-questoes {
+            border-left-color: #4A7FFF;
+        }
+
+        .card-questoes .card-button {
+            color: #4A7FFF;
+        }
+
+        .card-planeamento {
+            border-left-color: #2D8CC3;
+        }
+
+        .card-planeamento .card-button {
+            color: #2D8CC3;
+        }
+
+        .card-execucao {
+            border-left-color: #22c55e;
+        }
+
+        .card-execucao .card-button {
+            color: #22c55e;
+        }
+
+        .card-icon-large {
+            font-size: 56px;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .card-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f1e3d;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .card-description {
+            font-size: 15px;
+            color: #667eea;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .card-button {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .card-main:hover .card-button {
+            transform: translateX(5px);
+        }
+
+        /* MÓDULOS */
+        .module {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .module-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* TABS/CARDS DEPARTAMENTOS */
+        .dept-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .dept-card {
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dept-card:hover,
+        .dept-card.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-5px);
+        }
+
+        .dept-code {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .dept-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* TABELA PLANEAMENTO */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead {
+            background: #f5f5f5;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        /* FORM ELEMENTS */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="time"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            width: 45px;
+            height: 45px;
+            padding: 0;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+        }
+
+        /* QUESTÕES */
+        .questao-item {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .questao-header {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .questao-foco {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .questao-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* NC/OM BUTTONS */
+        .nc-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .nc-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .nc-btn:hover {
+            border-color: #667eea;
+        }
+
+        .nc-btn.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .nc-none {
+            color: #28a745;
+            border-color: #28a745;
+        }
+
+        .nc-none.active {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .nc-minor {
+            color: #ffa500;
+            border-color: #ffa500;
+        }
+
+        .nc-minor.active {
+            background: #fff3cd;
+            border-color: #ffa500;
+        }
+
+        .nc-major {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .nc-major.active {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        /* RELATÓRIO */
+        .relatorio-section {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .relatorio-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .assinatura-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .assinatura-bloco {
+            text-align: center;
+            border-top: 2px solid #333;
+            padding-top: 15px;
+            margin-top: 40px;
+        }
+
+        .assinatura-input {
+            border: none;
+            border-bottom: 2px solid #999;
+            text-align: center;
+            font-size: 12px;
+            padding: 5px;
+            width: 100%;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .assinatura-input:focus {
+            outline: none;
+            border-bottom-color: #667eea;
+        }
+
+        .assinatura-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        /* ALERT */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            .dept-cards {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .module {
+                padding: 20px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .btn,
+            .header-right,
+            .module-actions,
+            .modal {
+                display: none;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="header-left">
+                <div class="logo-box">
+                    <div class="logo-icon">📋</div>
+                </div>
+                <div>
+                    <h1>AuditHub</h1>
+                    <p>SISTEMA DE GESTÃO</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div id="statusSheet"></div>
+                <button class="btn-principal" id="btnPrincipal" onclick="voltarParaPrincipal()">📌 Painel Principal</button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD PRINCIPAL -->
+        <div id="dashboardPrincipal" class="dashboard-principal">
+            <div class="hero-section">
+                <h2 class="hero-title">BEM-VINDO AO AUDITHUB</h2>
+                <p class="hero-subtitle">Controlo total sobre os requisitos de conformidade e qualidade.</p>
+            </div>
+
+            <div class="cards-container">
+                <div class="card-main card-questoes" onclick="abrirModulo('questoes')">
+                    <div class="card-icon-large">🗂️</div>
+                    <div class="card-title">Questões</div>
+                    <div class="card-description">Gerencie o banco de questões por departamento. O que definir aqui será a base das suas auditorias.</div>
+                    <div class="card-button">CONFIGURAR BANCO →</div>
+                </div>
+
+                <div class="card-main card-planeamento" onclick="abrirModulo('planeamento')">
+                    <div class="card-icon-large">📅</div>
+                    <div class="card-title">Planeamento</div>
+                    <div class="card-description">Agende auditorias, designe auditores e defina datas para cada departamento operacional.</div>
+                    <div class="card-button">VER AGENDA →</div>
+                </div>
+
+                <div class="card-main card-execucao" onclick="abrirModulo('execucao')">
+                    <div class="card-icon-large">🔍</div>
+                    <div class="card-title">Execução</div>
+                    <div class="card-description">Inicie a verificação no terreno utilizando as questões configuradas por departamento.</div>
+                    <div class="card-button">COMEÇAR AGORA →</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO QUESTÕES -->
+        <div id="modQuestions" class="module">
+            <div class="module-header">
+                <div>
+                    <div class="module-title">🗂️ Gestão de Questões</div>
+                    <p style="color: #999; margin-top: 5px;">Configure as questões específicas por departamento</p>
+                </div>
+                <div class="module-actions">
+                    <button class="btn btn-primary" onclick="mostrarFormQuestao()">+ Nova Questão</button>
+                </div>
+            </div>
+
+            <!-- DEPARTAMENTOS -->
+            <div style="margin-bottom: 30px;">
+                <label style="margin-bottom: 15px;">Selecione o Departamento:</label>
+                <div class="dept-cards" id="deptCardsQuestoes">
+                    <!-- Renderizado dinamicamente -->
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO NUEVA QUESTÃO -->
+            <div id="formNovaQuestaoContainer" style="display: none; background: #f5f5f5; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <form onsubmit="salvarNovaQuestao(event)">
+                    <div class="form-group">
+                        <label for="deptNovaQuestao">Departamento *</label>
+                        <select id="deptNovaQuestao" required>
+                            <option value="">-- Selecione --</option>
+                            <option value="DCO">DCO - COMPRAS</option>
+                            <option value="DEN">DEN - ENGENHARIA</option>
+                            <option value="DATLOG">DATLOG - PÓS-VENDA (LOGÍSTICA)</option>
+                            <option value="DATTECH">DATTECH - PÓS-VENDA (TECH SUPPORT)</option>
+                            <option value="DPR">DPR - PRODUÇÃO</option>
+                            <option value="DLO">DLO - LOGÍSTICA</option>
+                            <option value="DSQA">DSQA - SISTEMA GESTÃO INTEGRADO</option>
+                            <option value="DCM">DCM - COMERCIAL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="textoNovaQuestao">Questão de Auditoria *</label>
+                        <textarea id="textoNovaQuestao" required placeholder="Digite a questão..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="focoNovaQuestao">Foco / Requisito</label>
+                        <textarea id="focoNovaQuestao" placeholder="Descreva o foco..."></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Guardar Questão</button>
+                        <button type="button" class="btn btn-secondary" onclick="ocultarFormQuestao()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- LISTA QUESTÕES -->
+            <div id="listaQuestoes">
+                <!-- Renderizado dinamicamente -->
+            </div>
+        </div>
+
+        <!-- MÓDULO PLANEAMENTO -->
+        <div id="modPlaneamento" class="module">
+            <div class="module-header">
+                <div>
+                    <div class="module-title">📅 Planeamento de Auditorias</div>
+                    <p style="color: #999; margin-top: 5px;">Agende auditorias com cronograma completo</p>
+                </div>
+                <div class="module-actions">
+                    <button class="btn btn-primary" onclick="mostrarFormPlaneamento()">+ Novo Planeamento</button>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO NOVO PLANEAMENTO -->
+            <div id="formNovoPlaneamentoContainer" style="display: none; background: #f5f5f5; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <form onsubmit="salvarNovoPlaneamento(event)">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="deptPlaneamento">Departamento *</label>
+                            <select id="deptPlaneamento" required>
+                                <option value="">-- Selecione --</option>
+                                <option value="DCO">DCO - COMPRAS</option>
+                                <option value="DEN">DEN - ENGENHARIA</option>
+                                <option value="DATLOG">DATLOG - PÓS-VENDA (LOGÍSTICA)</option>
+                                <option value="DATTECH">DATTECH - PÓS-VENDA (TECH SUPPORT)</option>
+                                <option value="DPR">DPR - PRODUÇÃO</option>
+                                <option value="DLO">DLO - LOGÍSTICA</option>
+                                <option value="DSQA">DSQA - SISTEMA GESTÃO INTEGRADO</option>
+                                <option value="DCM">DCM - COMERCIAL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataPlaneamento">Data *</label>
+                            <input type="date" id="dataPlaneamento" required>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="horaPlaneamento">Hora Início *</label>
+                            <input type="time" id="horaPlaneamento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="auditorPlaneamento">Auditor *</label>
+                            <input type="text" id="auditorPlaneamento" required placeholder="Nome do auditor">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="auditorCoordPlaneamento">Auditor Coordenador</label>
+                            <input type="text" id="auditorCoordPlaneamento" placeholder="Nome do coordenador">
+                        </div>
+                        <div class="form-group">
+                            <label for="auditadoPlaneamento">Auditado *</label>
+                            <input type="text" id="auditadoPlaneamento" required placeholder="Pessoa auditada">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Guardar Planeamento</button>
+                        <button type="button" class="btn btn-secondary" onclick="ocultarFormPlaneamento()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TABELA PLANEAMENTOS -->
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Departamento</th>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Auditor</th>
+                            <th>Auditado</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaPlaneamentos">
+                        <tr><td colspan="7" class="empty-state">Nenhum planeamento registado</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MÓDULO EXECUÇÃO -->
+        <div id="modExecucao" class="module">
+            <div class="module-header">
+                <div>
+                    <div class="module-title">🔍 Execução de Auditoria</div>
+                    <p style="color: #999; margin-top: 5px;">Selecione o departamento e registe as evidências</p>
+                </div>
+            </div>
+
+            <!-- DEPARTAMENTOS GRID -->
+            <label style="display: block; margin-bottom: 15px; font-weight: 600;">Selecione o Departamento:</label>
+            <div class="dept-cards" id="deptCardsExecucao">
+                <!-- Renderizado dinamicamente -->
+            </div>
+
+            <!-- QUESTÕES PARA EXECUÇÃO -->
+            <div id="questoesExecucao" style="margin-top: 30px;">
+                <!-- Renderizado dinamicamente -->
+            </div>
+
+            <!-- ASSINATURAS -->
+            <div id="assinaturasArea" style="display: none; margin-top: 40px; padding-top: 40px; border-top: 2px solid #eee;">
+                <h3 style="margin-bottom: 30px; font-size: 18px; font-weight: 600;">Assinaturas</h3>
+                <div class="assinatura-area">
+                    <div class="assinatura-bloco">
+                        <input type="text" class="assinatura-input" placeholder="Assinatura do Auditor" id="assinAuditor">
+                        <div class="assinatura-label">Auditor</div>
+                    </div>
+                    <div class="assinatura-bloco">
+                        <input type="text" class="assinatura-input" placeholder="Assinatura do Auditado" id="assinAuditado">
+                        <div class="assinatura-label">Auditado</div>
+                    </div>
+                    <div class="assinatura-bloco">
+                        <input type="text" class="assinatura-input" placeholder="Assinatura do Coordenador" id="assinCoordenador">
+                        <div class="assinatura-label">Coordenador</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" style="padding: 15px 40px; font-size: 16px;" onclick="finalizarAuditoria()">✓ Finalizar Auditoria</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ESTADO GLOBAL
+        let estadoAtual = 'principal'; // principal, questoes, planeamento, execucao
+        let deptSelecionadoExecucao = null;
+
+        // DADOS (importar dados com base no code anterior)
+        let dados = {
+            introPlaneamentos: [],
+            questoes: [],
+            auditorias: [],
+            auditoriasRegistadas: [],
+            respostas: {}
+        };
+
+        // Constantes
+        const SHEET_ID = '1bMoWDD2mHdzgFtJijQld-GHCcmm9rYpZ996Z2JIOMgk';
+        const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxIDIhZAKGbIcr2L4bJeEd__F2p27ly1aOfMJSphggznOEsp-P4ccp-wahyDTHhkLJ/exec';
+
+        const DEPARTAMENTOS = {
+            'DCO': 'COMPRAS',
+            'DEN': 'ENGENHARIA',
+            'DATLOG': 'PÓS-VENDA (LOGÍSTICA)',
+            'DATTECH': 'PÓS-VENDA (TECH SUPPORT)',
+            'DPR': 'PRODUÇÃO',
+            'DLO': 'LOGÍSTICA',
+            'DSQA': 'SISTEMA GESTÃO INTEGRADO',
+            'DCM': 'COMERCIAL'
+        };
+
+        const DOCUMENTOS_REFERENCIA = [
+            'Fluxograma do Processo',
+            'Procedimento do Processo',
+            'Instruções de Trabalho',
+            'Instruções Operatórias',
+            'Modelos',
+            'Manuais'
+        ];
+
+        // ============ NAVEGAÇÃO ===============
+        function abrirModulo(modulo) {
+            estadoAtual = modulo;
+            
+            // Esconder dashboard
+            document.getElementById('dashboardPrincipal').style.display = 'none';
+            
+            // Esconder todos os módulos
+            document.getElementById('modQuestions').style.display = 'none';
+            document.getElementById('modPlaneamento').style.display = 'none';
+            document.getElementById('modExecucao').style.display = 'none';
+            
+            // Mostrar módulo selecionado
+            if (modulo === 'questoes') {
+                document.getElementById('modQuestions').style.display = 'block';
+                atualizarDeptCardsQuestoes();
+            } else if (modulo === 'planeamento') {
+                document.getElementById('modPlaneamento').style.display = 'block';
+                atualizarTabelaPlaneamentos();
+            } else if (modulo === 'execucao') {
+                document.getElementById('modExecucao').style.display = 'block';
+                atualizarDeptCardsExecucao();
+            }
+            
+            // Mostrar botão Painel Principal
+            document.getElementById('btnPrincipal').classList.add('show');
+            
+            // Scroll para cima
+            window.scrollTo(0, 0);
+        }
+
+        function voltarParaPrincipal() {
+            estadoAtual = 'principal';
+            
+            // Esconder todos os módulos
+            document.getElementById('modQuestions').style.display = 'none';
+            document.getElementById('modPlaneamento').style.display = 'none';
+            document.getElementById('modExecucao').style.display = 'none';
+            
+            // Mostrar dashboard
+            document.getElementById('dashboardPrincipal').style.display = 'block';
+            
+            // Esconder botão
+            document.getElementById('btnPrincipal').classList.remove('show');
+            
+            // Limpar seleções
+            deptSelecionadoExecucao = null;
+            
+            window.scrollTo(0, 0);
+        }
+
+        // ============ QUESTÕES ===============
+        function atualizarDeptCardsQuestoes() {
+            const container = document.getElementById('deptCardsQuestoes');
+            const deptCodigos = Object.keys(DEPARTAMENTOS);
+            
+            container.innerHTML = deptCodigos.map(codDept => `
+                <div class="dept-card" onclick="filtrarQuestoesPorDept('${codDept}')">
+                    <div class="dept-code">${codDept}</div>
+                    <div class="dept-name">${DEPARTAMENTOS[codDept]}</div>
+                </div>
+            `).join('');
+            
+            // Mostrar todas as questões por default
+            renderizarQuestoes(null);
+        }
+
+        function filtrarQuestoesPorDept(codDept) {
+            // Marcar card como active
+            document.querySelectorAll('#deptCardsQuestoes .dept-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.dept-card').classList.add('active');
+            
+            renderizarQuestoes(codDept);
+        }
+
+        function renderizarQuestoes(filtro) {
+            const lista = document.getElementById('listaQuestoes');
+            const questoesFilter = filtro ? dados.questoes.filter(q => q.departamento === filtro) : dados.questoes;
+            
+            if (questoesFilter.length === 0) {
+                lista.innerHTML = '<div class="alert alert-info" style="text-align: center;">Nenhuma questão registada ' + (filtro ? 'neste departamento' : 'ainda') + '</div>';
+                return;
+            }
+            
+            lista.innerHTML = questoesFilter.map((q, idx) => `
+                <div class="questao-item">
+                    <div class="questao-header">
+                        <div><strong>Q${idx + 1}</strong>: ${q.questao}</div>
+                        <button class="btn btn-small btn-secondary" onclick="eliminarQuestao('${q.id}')">🗑️</button>
+                    </div>
+                    <div class="questao-foco"><strong>Foco:</strong> ${q.foco}</div>
+                    <div style="font-size: 12px; color: #999;">ID: ${q.id} | Departamento: ${q.departamento}</div>
+                </div>
+            `).join('');
+        }
+
+        function mostrarFormQuestao() {
+            document.getElementById('formNovaQuestaoContainer').style.display = 'block';
+        }
+
+        function ocultarFormQuestao() {
+            document.getElementById('formNovaQuestaoContainer').style.display = 'none';
+            document.getElementById('deptNovaQuestao').value = '';
+            document.getElementById('textoNovaQuestao').value = '';
+            document.getElementById('focoNovaQuestao').value = '';
+        }
+
+        async function salvarNovaQuestao(e) {
+            e.preventDefault();
+            
+            const dept = document.getElementById('deptNovaQuestao').value;
+            const questao = document.getElementById('textoNovaQuestao').value;
+            const foco = document.getElementById('focoNovaQuestao').value;
+            
+            const novaQuestao = {
+                id: 'Q' + (dados.questoes.length + 1),
+                departamento: dept,
+                questao: questao,
+                foco: foco || 'Sem especificação'
+            };
+            
+            dados.questoes.push(novaQuestao);
+            guardarDados();
+            
+            await enviarParaAppScript('adicionarQuestao', {
+                departamento: dept,
+                investigacao: questao,
+                foco: foco || 'Sem especificação'
+            });
+            
+            ocultarFormQuestao();
+            atualizarDeptCardsQuestoes();
+            alert('Questão adicionada com sucesso!');
+        }
+
+        function eliminarQuestao(id) {
+            if (confirm('Deseja eliminar esta questão?')) {
+                dados.questoes = dados.questoes.filter(q => q.id !== id);
+                guardarDados();
+                atualizarDeptCardsQuestoes();
+            }
+        }
+
+        // ============ PLANEAMENTO ===============
+        function atualizarTabelaPlaneamentos() {
+            const tbody = document.getElementById('tabelaPlaneamentos');
+            
+            if (dados.introPlaneamentos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhum planeamento registado</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = dados.introPlaneamentos.map(plan => `
+                <tr>
+                    <td><strong>${plan.id}</strong></td>
+                    <td>${plan.departamento}</td>
+                    <td>${plan.dataAuditoria}</td>
+                    <td>${plan.horaPrevista}</td>
+                    <td>${plan.auditor}</td>
+                    <td>${plan.auditado}</td>
+                    <td>
+                        <button class="btn btn-small" style="background: none; padding: 0; color: #666;">✎</button>
+                        <button class="btn btn-small" style="background: none; padding: 0; color: #dc3545;" onclick="eliminarPlaneamento('${plan.id}')">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function mostrarFormPlaneamento() {
+            document.getElementById('formNovoPlaneamentoContainer').style.display = 'block';
+        }
+
+        function ocultarFormPlaneamento() {
+            document.getElementById('formNovoPlaneamentoContainer').style.display = 'none';
+        }
+
+        async function salvarNovoPlaneamento(e) {
+            e.preventDefault();
+            
+            const data = new Date();
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const dia = String(data.getDate()).padStart(2, '0');
+            const id = `AUD-${ano}${mes}${dia}-${String(dados.introPlaneamentos.length + 1).padStart(3, '0')}`;
+            
+            const novoPlaneamento = {
+                id: id,
+                departamento: document.getElementById('deptPlaneamento').value,
+                dataAuditoria: document.getElementById('dataPlaneamento').value,
+                horaPrevista: document.getElementById('horaPlaneamento').value,
+                auditor: document.getElementById('auditorPlaneamento').value,
+                auditorCoord: document.getElementById('auditorCoordPlaneamento').value,
+                auditado: document.getElementById('auditadoPlaneamento').value,
+                documentosRef: '',
+                registadoPor: 'Sistema',
+                colaboradores: '',
+                requisitos: '',
+                horaAuditoria: '',
+                dataCriacao: new Date().toISOString()
+            };
+            
+            dados.introPlaneamentos.push(novoPlaneamento);
+            guardarDados();
+            
+            await enviarParaAppScript('salvarIntro', novoPlaneamento);
+            
+            ocultarFormPlaneamento();
+            atualizarTabelaPlaneamentos();
+            document.getElementById('formNovoPlaneamentoContainer').reset();
+            alert(`Planeamento guardado!\nID: ${id}`);
+        }
+
+        function eliminarPlaneamento(id) {
+            if (confirm('Deseja eliminar este planeamento?')) {
+                dados.introPlaneamentos = dados.introPlaneamentos.filter(p => p.id !== id);
+                guardarDados();
+                atualizarTabelaPlaneamentos();
+            }
+        }
+
+        // ============ EXECUÇÃO ===============
+        function atualizarDeptCardsExecucao() {
+            const container = document.getElementById('deptCardsExecucao');
+            const deptCodigos = Object.keys(DEPARTAMENTOS);
+            
+            container.innerHTML = deptCodigos.map(codDept => `
+                <div class="dept-card" onclick="selecionarDeptExecucao('${codDept}')">
+                    <div class="dept-code">${codDept}</div>
+                    <div class="dept-name">${DEPARTAMENTOS[codDept]}</div>
+                </div>
+            `).join('');
+        }
+
+        function selecionarDeptExecucao(codDept) {
+            deptSelecionadoExecucao = codDept;
+            
+            // Marcar como active
+            document.querySelectorAll('#deptCardsExecucao .dept-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.dept-card').classList.add('active');
+            
+            renderizarQuestoesPara Execucao(codDept);
+        }
+
+        function renderizarQuestoesPara Execucao(codDept) {
+            const questoes = dados.questoes.filter(q => q.departamento === codDept);
+            const container = document.getElementById('questoesExecucao');
+            
+            if (questoes.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Sem questões disponíveis para este departamento</div>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <h3 style="margin: 30px 0 20px 0; font-size: 18px; font-weight: 600;">Questões a Registar</h3>
+                ${questoes.map((q, idx) => `
+                    <div class="questao-item">
+                        <div class="questao-header">
+                            <div><strong>Q${idx + 1}</strong>: ${q.questao}</div>
+                        </div>
+                        <div class="questao-foco"><strong>Foco:</strong> ${q.foco}</div>
+                        
+                        <label style="margin-top: 15px; display: block; font-weight: 600;">Constatação / Evidência:</label>
+                        <textarea id="evid_${q.id}" placeholder="Descreva as evidências..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; min-height: 80px; font-family: inherit;"></textarea>
+                        
+                        <label style="margin-top: 15px; display: block; font-weight: 600;">Observação de Melhoria (OM):</label>
+                        <textarea id="om_${q.id}" placeholder="Sugestões de melhoria..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; min-height: 60px; font-family: inherit;"></textarea>
+                        
+                        <label style="margin-top: 15px; display: block; font-weight: 600;">Classificação (NC):</label>
+                        <div class="nc-controls">
+                            <button type="button" class="nc-btn nc-none" onclick="selecionarNC('${q.id}', 'Nenhuma', this)">✓ OK</button>
+                            <button type="button" class="nc-btn nc-minor" onclick="selecionarNC('${q.id}', 'Menor', this)">⚠️ Menor</button>
+                            <button type="button" class="nc-btn nc-major" onclick="selecionarNC('${q.id}', 'Maior', this)">✗ Maior</button>
+                        </div>
+                        <input type="hidden" id="nc_${q.id}" value="">
+                    </div>
+                `).join('')}
+            ` + (questoes.length > 0 ? `
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="btn btn-primary" style="padding: 15px 40px;" onclick="prepararAssinaturas()">Próximo - Assinaturas →</button>
+                </div>
+            ` : '');
+        }
+
+        function selecionarNC(questaoId, valor, botao) {
+            document.getElementById('nc_' + questaoId).value = valor;
+            
+            // Remover active de todos os botões desta questão
+            botao.parentElement.querySelectorAll('.nc-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Adicionar active ao botão clicado
+            botao.classList.add('active');
+        }
+
+        function prepararAssinaturas() {
+            if (!deptSelecionadoExecucao) return;
+            
+            // Validar que todas as questões foram preenchidas
+            const questoes = dados.questoes.filter(q => q.departamento === deptSelecionadoExecucao);
+            for (let q of questoes) {
+                if (!document.getElementById('nc_' + q.id).value) {
+                    alert('Por favor, classifique todas as questões!');
+                    return;
+                }
+            }
+            
+            // Mostrar área de assinaturas
+            document.getElementById('questoesExecucao').style.display = 'none';
+            document.getElementById('assinaturasArea').style.display = 'block';
+            
+            // Scroll para assinaturas
+            document.getElementById('assinaturasArea').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function finalizarAuditoria() {
+            const questoes = dados.questoes.filter(q => q.departamento === deptSelecionadoExecucao);
+            
+            const data = new Date();
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const dia = String(data.getDate()).padStart(2, '0');
+            const idGerado = `AUD-${ano}${mes}${dia}-${String(dados.auditorias.length + 1).padStart(3, '0')}`;
+            
+            const registosParaEnviar = [];
+            
+            questoes.forEach(q => {
+                const registo = {
+                    id: idGerado,
+                    departamento: deptSelecionadoExecucao,
+                    investigacao: q.questao,
+                    foco: q.foco,
+                    evidencia: document.getElementById('evid_' + q.id).value,
+                    om: document.getElementById('om_' + q.id).value,
+                    nc: document.getElementById('nc_' + q.id).value,
+                    dataCriacao: new Date().toISOString()
+                };
+                
+                dados.auditoriasRegistadas.push(registo);
+                registosParaEnviar.push(registo);
+            });
+            
+            // Guardar auditoria
+            dados.auditorias.push({
+                id: idGerado,
+                departamento: deptSelecionadoExecucao,
+                dataCriacao: new Date().toISOString(),
+                assinador: document.getElementById('assinAuditor').value,
+                assinauditado: document.getElementById('assinAuditado').value,
+                assinador_coord: document.getElementById('assinCoordenador').value
+            });
+            
+            guardarDados();
+            
+            // Enviar para AppScript
+            if (registosParaEnviar.length > 0) {
+                await enviarParaAppScript('salvarAuditoria', {
+                    id: idGerado,
+                    departamento: deptSelecionadoExecucao,
+                    registos: registosParaEnviar
+                });
+            }
+            
+            alert(`Auditoria finalizada com sucesso!\nID: ${idGerado}`);
+            voltarParaPrincipal();
+        }
+
+        // ============ DADOS E UTILS ===============
+        function guardarDados() {
+            localStorage.setItem('auditSysData', JSON.stringify(dados));
+        }
+
+        async function enviarParaAppScript(operacao, dados_) {
+            if (!APPSCRIPT_URL) {
+                console.log('⚠️ AppScript não configurado');
+                return false;
+            }
+
+            try {
+                const resposta = await fetch(APPSCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ operacao: operacao, ...dados_ })
+                });
+
+                const resultado = await resposta.json();
+                console.log(resultado.status === 'success' ? '✅ Sincronizado' : '❌ Erro');
+                return resultado.status === 'success';
+            } catch (erro) {
+                console.error('❌ Erro:', erro);
+                return false;
+            }
+        }
+
+        function carregarDados() {
+            const dadosArmazenados = localStorage.getItem('auditSysData');
+            if (dadosArmazenados) {
+                dados = JSON.parse(dadosArmazenados);
+            }
+        }
+
+        // ============ INIT ===============
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Sistema inicializado');
+            document.getElementById('statusSheet').textContent = '✅ Sistema pronto';
+            
+            carregarDados();
+            
+            // Carregar dados do Google Sheets (similar ao anterior)
+            // ... (manter a lógica anterior de carregarDadosDoSheet)
+            
+            // Se não tem dados de exemplo, adicionar alguns
+            if (dados.questoes.length === 0) {
+                dados.questoes = [
+                    { id: 'Q1', departamento: 'DCO', questao: 'Existem controlos internos adequados?', foco: 'Conformidade' },
+                    { id: 'Q2', departamento: 'DCO', questao: 'Os registos de fornecedores estão atualizados?', foco: 'Gestão' },
+                    { id: 'Q3', departamento: 'DEN', questao: 'Especificações técnicas revistas?', foco: '...
+
+' }
+                ];
+                guardarDados();
+            }
+        });
+    </script>
+</body>
+</html>

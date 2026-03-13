@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuditHub - Sistema de Gestão</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top left, #37b5e7 0%, #0a0a0a 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #030303 0%, #070707 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+            gap: 0;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-tab:hover {
+            background: #efefef;
+        }
+
+        .nav-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="time"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead {
+            background: #f5f5f5;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .card {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            float: right;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+            color: #333;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .question-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .question-header {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .question-meta {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        .evidence-field {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+
+        .score-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .score-option {
+            display: flex;
+        }
+
+        .score-option input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .score-option label {
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .report-section {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+
+        .report-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            color: #333;
+        }
+
+        .report-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-left: 3px solid #667eea;
+            background: #f9f9f9;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .nav-tabs,
+            .btn {
+                display: none;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Sistema de Auditorias</h1>
+            <p>Gestão flexível de auditorias e registo de evidências</p>
+            <div id="statusSheet" style="margin-top: 10px; font-size: 14px; opacity: 0.9;"></div>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchModule('intro')">Planeamento (INTRO)</button>
+            <button class="nav-tab" onclick="switchModule('auditoria')">Execução (AUDITORIA)</button>
+            <button class="nav-tab" onclick="switchModule('questoes')">Questões</button>
+            <button class="nav-tab" onclick="switchModule('relatorio')">Relatório</button>
+        </div>
+
+        <div class="content">
+            <!-- MÓDULO 1: PLANEAMENTO (INTRO) -->
+            <div id="intro" class="module active">
+                <h2 class="section-title">Planeamento de Auditorias</h2>
+                
+                <div class="alert alert-info">
+                    <strong>ℹ️ Informação:</strong> Registe os cronogramas, responsáveis e informações de preparação para as auditorias.
+                </div>
+
+                <form id="formIntro" onsubmit="salvarIntro(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="departamento">Departamento *</label>
+                            <select id="departamento" required>
+                                <option value="">-- Selecione --</option>
+                                <option value="DCO">DCO - COMPRAS</option>
+                                <option value="DEN">DEN - ENGENHARIA</option>
+                                <option value="DATLOG">DATLOG - PÓS-VENDA (LOGÍSTICA)</option>
+                                <option value="DATTECH">DATTECH - PÓS-VENDA (TECH SUPPORT)</option>
+                                <option value="DPR">DPR - PRODUÇÃO</option>
+                                <option value="DLO">DLO - LOGÍSTICA</option>
+                                <option value="DSQA">DSQA - SISTEMA GESTÃO INTEGRADO</option>
+                                <option value="DCM">DCM - COMERCIAL</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="auditorCoord">Auditor Coordenador *</label>
+                            <input type="text" id="auditorCoord" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="auditor">Auditor *</label>
+                            <input type="text" id="auditor" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="auditado">Auditado *</label>
+                            <input type="text" id="auditado" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registadoPor">Registado Por *</label>
+                            <input type="text" id="registadoPor" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Documentos de Referência da Empresa</label>
+                        <div id="documentsContainer" style="background: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #eee;">
+                            <!-- Renderizado dinamicamente -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="colaboradores">Colaboradores Contactados</label>
+                        <textarea id="colaboradores" placeholder="Liste os colaboradores contactados..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requisitos">Requisitos</label>
+                        <textarea id="requisitos" placeholder="Descreva os requisitos..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dataAuditoria">Data de Auditoria *</label>
+                            <input type="date" id="dataAuditoria" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="horaPrevista">Hora Prevista *</label>
+                            <input type="time" id="horaPrevista" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horaAuditoria">Hora da Auditoria</label>
+                        <input type="time" id="horaAuditoria">
+                    </div>
+
+                    <div class="actions" style="margin-top: 30px;">
+                        <button type="submit" class="btn btn-primary">Guardar Planeamento</button>
+                        <button type="button" class="btn btn-secondary" onclick="limparIntro()">Limpar</button>
+                    </div>
+                </form>
+
+                <hr style="margin: 40px 0;">
+                <h3 class="section-title">Auditorias Planeadas</h3>
+
+                <div id="listaIntro"></div>
+            </div>
+
+            <!-- MÓDULO 2: EXECUÇÃO (AUDITORIA) -->
+            <div id="auditoria" class="module">
+                <h2 class="section-title">Execução de Auditoria</h2>
+
+                <div class="alert alert-info">
+                    <strong>ℹ️ Informação:</strong> Selecione o departamento para aceder às questões específicas e registar as evidências encontradas.
+                </div>
+
+                <div class="form-group">
+                    <label for="selectDept">Selecione o Departamento *</label>
+                    <select id="selectDept" onchange="carregarQuestoes()">
+                        <option value="">-- Selecione um departamento --</option>
+                    </select>
+                </div>
+
+                <div id="questoesContainer"></div>
+
+                <hr style="margin: 40px 0;">
+                <h3 style="margin-top: 30px;">📋 Registos Guardados</h3>
+                <div id="registosContainer"></div>
+            </div>
+
+            <!-- MÓDULO 3: GESTÃO DE QUESTÕES -->
+            <div id="questoes" class="module">
+                <h2 class="section-title">Gestão de Questões por Departamento</h2>
+
+                <div class="alert alert-info">
+                    <strong>ℹ️ Informação:</strong> Adicione ou modifique as questões específicas para cada departamento.
+                </div>
+
+                <div class="form-group">
+                    <label for="deptQuestao">Departamento *</label>
+                    <select id="deptQuestao" required>
+                        <option value="">-- Selecione --</option>
+                        <option value="DCO">DCO - COMPRAS</option>
+                        <option value="DEN">DEN - ENGENHARIA</option>
+                        <option value="DATLOG">DATLOG - PÓS-VENDA (LOGÍSTICA)</option>
+                        <option value="DATTECH">DATTECH - PÓS-VENDA (TECH SUPPORT)</option>
+                        <option value="DPR">DPR - PRODUÇÃO</option>
+                        <option value="DLO">DLO - LOGÍSTICA</option>
+                        <option value="DSQA">DSQA - SISTEMA GESTÃO INTEGRADO</option>
+                        <option value="DCM">DCM - COMERCIAL</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="textoQuestao">Questão de Auditoria / Investigação *</label>
+                    <textarea id="textoQuestao" placeholder="Digite a questão..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="focoRequisito">Foco / Requisito</label>
+                    <textarea id="focoRequisito" placeholder="Descreva o foco ou requisito..."></textarea>
+                </div>
+
+                <div class="actions" style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="adicionarQuestao()">Adicionar Questão</button>
+                </div>
+
+                <h3 class="section-title">Questões Existentes</h3>
+                <div id="listaQuestoes"></div>
+            </div>
+
+            <!-- MÓDULO 4: RELATÓRIO -->
+            <div id="relatorio" class="module">
+                <h2 class="section-title">Relatório de Auditorias</h2>
+
+                <div class="alert alert-info">
+                    <strong>ℹ️ Informação:</strong> Visualize e exporte o relatório de auditorias realizadas.
+                </div>
+
+                <div class="form-group">
+                    <label for="selectAuditoriaRel">Selecione uma Auditoria para Relatório</label>
+                    <select id="selectAuditoriaRel" onchange="carregarRelatorio()">
+                        <option value="">-- Selecione uma auditoria --</option>
+                    </select>
+                </div>
+
+                <div id="relatorioContainer"></div>
+
+                <div class="actions" style="margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="exportarPDF()">📥 Exportar PDF</button>
+                    <button class="btn btn-secondary" onclick="imprimirRelatorio()">🖨️ Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL para editar auditoria -->
+    <div id="modalAuditoria" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="fecharModal()">&times;</button>
+            <div class="modal-header">Editar Planeamento</div>
+            <form id="formEditIntro" onsubmit="guardarEdicaoIntro(event)">
+                <input type="hidden" id="editIdIntro">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editId">ID</label>
+                        <input type="text" id="editId" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDepartamento">Departamento</label>
+                        <input type="text" id="editDepartamento">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editAuditorCoord">Auditor Coordenador</label>
+                        <input type="text" id="editAuditorCoord">
+                    </div>
+                    <div class="form-group">
+                        <label for="editAuditor">Auditor</label>
+                        <input type="text" id="editAuditor">
+                    </div>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // URL da Google Sheet
+        const SHEET_ID = '1bMoWDD2mHdzgFtJijQld-GHCcmm9rYpZ996Z2JIOMgk';
+        const SHEET_INTRO = 'INTRO';
+        const SHEET_REGISTOS = 'REGISTOS';
+        
+        // URL do AppScript para Sync Automático (deixe vazio para usar CSV manual)
+        // Passo a passo: APPSCRIPT-SETUP.md
+        const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxIDIhZAKGbIcr2L4bJeEd__F2p27ly1aOfMJSphggznOEsp-P4ccp-wahyDTHhkLJ/exec';
+
+        // Mapeamento de Departamentos
+        const DEPARTAMENTOS = {
+            'DCO': 'COMPRAS',
+            'DEN': 'ENGENHARIA',
+            'DATLOG': 'PÓS-VENDA (LOGÍSTICA)',
+            'DATTECH': 'PÓS-VENDA (TECH SUPPORT)',
+            'DPR': 'PRODUÇÃO',
+            'DLO': 'LOGÍSTICA',
+            'DSQA': 'SISTEMA GESTÃO INTEGRADO',
+            'DCM': 'COMERCIAL'
+        };
+
+        // Documentos de Referência Disponíveis
+        const DOCUMENTOS_REFERENCIA = [
+            'Fluxograma do Processo',
+            'Procedimento do Processo',
+            'Instruções de Trabalho',
+            'Instruções Operatórias',
+            'Modelos',
+            'Manuais'
+        ];
+
+        // Função auxiliar para obter nome completo do departamento
+        function getNomeDepartamento(codigo) {
+            return DEPARTAMENTOS[codigo] || codigo;
+        }
+
+        // Função auxiliar para obter código do departamento
+        function getCodigoDepartamento(nome) {
+            for (let [codigo, nomeDept] of Object.entries(DEPARTAMENTOS)) {
+                if (nomeDept === nome || codigo === nome) {
+                    return codigo;
+                }
+            }
+            return nome;
+        }
+        
+        // Dados armazenados localmente
+        let dados = {
+            introPlaneamentos: [],
+            questoes: [],
+            auditorias: [],
+            auditoriasRegistadas: [],
+            respostas: {}
+        };
+
+        // Carregar dados da Google Sheet
+        async function carregarDadosDoSheet() {
+            try {
+                // Converter URL da sheet em CSV
+                const uriIntro = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_INTRO}`;
+                const uriRegistos = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_REGISTOS}`;
+
+                // Carregar INTRO
+                const respostaIntro = await fetch(uriIntro);
+                const csvIntro = await respostaIntro.text();
+                processarIntro(csvIntro);
+
+                // Carregar REGISTOS (questões)
+                const respostaRegistos = await fetch(uriRegistos);
+                const csvRegistos = await respostaRegistos.text();
+                processarQuestoes(csvRegistos);
+
+                document.getElementById('statusSheet').textContent = '✅ Conectado ao Google Sheets';
+                console.log('✅ Dados carregados da Google Sheet com sucesso!');
+            } catch (erro) {
+                document.getElementById('statusSheet').textContent = 'ℹ️ Modo offline - dados locais';
+                console.warn('⚠️ Erro ao carregar Google Sheet:', erro);
+                console.log('ℹ️ Usando dados de exemplo locais...');
+                carregarDadosLocais();
+            }
+        }
+
+        // Processar CSV do INTRO
+        function processarIntro(csv) {
+            const linhas = csv.trim().split('\n');
+            const headers = linhas[0].split(',').map(h => h.trim().toLowerCase());
+
+            for (let i = 1; i < linhas.length; i++) {
+                if (linhas[i].trim() === '') continue;
+
+                const valores = linhas[i].split(',').map(v => v.trim());
+                const intro = {};
+
+                headers.forEach((header, idx) => {
+                    intro[header] = valores[idx] || '';
+                });
+
+                if (intro.id) {
+                    dados.introPlaneamentos.push({
+                        id: intro.id,
+                        departamento: intro.departamento,
+                        auditorCoord: intro['auditor coordenador'] || '',
+                        auditor: intro.auditor || '',
+                        auditado: intro.auditado || '',
+                        documentosRef: intro['documentos de referência da empresa'] || '',
+                        registadoPor: intro['registado por'] || '',
+                        colaboradores: intro['colaboradores contactados'] || '',
+                        requisitos: intro.requisitos || '',
+                        horaPrevista: intro['hora prevista'] || '',
+                        horaAuditoria: intro['hora da auditoria'] || '',
+                        dataAuditoria: intro['data de auditoria'] || ''
+                    });
+                }
+            }
+        }
+
+        // Processar CSV do REGISTOS (questões)
+        function processarQuestoes(csv) {
+            const linhas = csv.trim().split('\n');
+            if (linhas.length === 0) {
+                console.warn('❌ CSV vazio');
+                return;
+            }
+            
+            console.log('📥 Linhas encontradas no CSV:', linhas.length);
+            console.log('📄 Primeira linha (headers):', linhas[0]);
+
+            // Parser CSV simples mas robusto
+            function parseCSVLine(line) {
+                const result = [];
+                let current = '';
+                let insideQuotes = false;
+
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    const nextChar = line[i + 1];
+
+                    if (char === '"') {
+                        insideQuotes = !insideQuotes;
+                    } else if (char === ',' && !insideQuotes) {
+                        result.push(current.trim().replace(/^"|"$/g, ''));
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                result.push(current.trim().replace(/^"|"$/g, ''));
+                return result;
+            }
+
+            const headers = parseCSVLine(linhas[0]).map(h => h.toLowerCase());
+            console.log('✓ Headers processados:', headers);
+
+            let contador = 1;
+            for (let i = 1; i < linhas.length; i++) {
+                if (linhas[i].trim() === '') continue;
+
+                const valores = parseCSVLine(linhas[i]);
+                console.log(`📌 Linha ${i}:`, valores);
+
+                const questao = {};
+                headers.forEach((header, idx) => {
+                    questao[header] = valores[idx] || '';
+                });
+
+                console.log(`🔍 Questão ${i}:`, questao);
+
+                // Procurar diferentes variações de nomes de colunas
+                const departamento = questao.departamento || 
+                                     questao['departamento'] ||
+                                     Object.keys(questao).find(k => k.includes('depart'))?.[questao[Object.keys(questao).find(k => k.includes('depart'))]];
+                
+                const investigacao = questao['investigação (questão de auditoria)'] || 
+                                     questao['investigação (questão de auditoria) '.trim()] ||
+                                     questao['questão de auditoria'] ||
+                                     questao['investigação'] ||
+                                     questao['questão'] ||
+                                     Object.keys(questao).find(k => k.includes('investig') || k.includes('questão'))?.[questao[Object.keys(questao).find(k => k.includes('investig') || k.includes('questão'))]];
+                
+                const foco = questao['foco / requisito'] || 
+                            questao['foco / requisito '.trim()] ||
+                            questao['requisito'] ||
+                            questao['foco'] ||
+                            Object.keys(questao).find(k => k.includes('foco') || k.includes('requisito'))?.[questao[Object.keys(questao).find(k => k.includes('foco') || k.includes('requisito'))]];
+
+                console.log(`  Departamento: "${departamento}"`);
+                console.log(`  Investigação: "${investigacao}"`);
+                console.log(`  Foco: "${foco}"`);
+
+                if (departamento && departamento.trim() && investigacao && investigacao.trim()) {
+                    // Mapear nome completo para código se necessário
+                    let codigoDept = departamento.trim();
+                    for (let [codigo, nome] of Object.entries(DEPARTAMENTOS)) {
+                        if (nome === codigoDept || nome.toLowerCase() === codigoDept.toLowerCase()) {
+                            codigoDept = codigo;
+                            break;
+                        }
+                    }
+
+                    dados.questoes.push({
+                        id: 'Q' + contador,
+                        departamento: codigoDept,
+                        questao: investigacao.trim(),
+                        foco: foco ? foco.trim() : 'Sem especificação'
+                    });
+                    console.log(`✅ Questão Q${contador} adicionada ao departamento ${codigoDept}`);
+                    contador++;
+                } else {
+                    console.warn(`⚠️ Linha ${i} ignorada: faltam dados obrigatórios`);
+                }
+            }
+            console.log(`✅ Total de questões carregadas do Google Sheets: ${dados.questoes.length}`);
+        }
+
+        // Carregar dados locais (fallback)
+        function carregarDadosLocais() {
+            // Dados de exemplo com códigos de departamento
+            dados.questoes = [
+                {
+                    id: 'Q1',
+                    departamento: 'DCO',
+                    questao: 'Existem controlos internos adequados sobre os processos de compra?',
+                    foco: 'Conformidade com políticas internas'
+                },
+                {
+                    id: 'Q2',
+                    departamento: 'DCO',
+                    questao: 'Os registos de fornecedores estão atualizados?',
+                    foco: 'Gestão de fornecedores'
+                },
+                {
+                    id: 'Q3',
+                    departamento: 'DEN',
+                    questao: 'As especificações técnicas são revistas regularmente?',
+                    foco: 'Conformidade com requisitos técnicos'
+                },
+                {
+                    id: 'Q4',
+                    departamento: 'DEN',
+                    questao: 'Existem registos de testes de engenharia?',
+                    foco: 'Rastreabilidade de testes'
+                },
+                {
+                    id: 'Q5',
+                    departamento: 'DPR',
+                    questao: 'Os controlos de qualidade são implementados adequadamente?',
+                    foco: 'Qualidade do produto'
+                },
+                {
+                    id: 'Q6',
+                    departamento: 'DPR',
+                    questao: 'Os registos de produção estão completos?',
+                    foco: 'Rastreabilidade de produção'
+                },
+                {
+                    id: 'Q7',
+                    departamento: 'DLO',
+                    questao: 'Os procedimentos de armazenagem são seguidos?',
+                    foco: 'Conformidade com procedimentos'
+                },
+                {
+                    id: 'Q8',
+                    departamento: 'DLO',
+                    questao: 'As identificações de produtos estão corretas?',
+                    foco: 'Gestão de inventário'
+                },
+                {
+                    id: 'Q9',
+                    departamento: 'DCM',
+                    questao: 'Os registos de vendas estão atualizados?',
+                    foco: 'Gestão de vendas'
+                },
+                {
+                    id: 'Q10',
+                    departamento: 'DCM',
+                    questao: 'Os contratos com clientes são válidos?',
+                    foco: 'Conformidade contratual'
+                }
+            ];
+            console.log('📌 Dados de exemplo carregados:', dados.questoes.length, 'questões');
+        }
+
+        // Carregar dados do localStorage ao iniciar
+        function carregarDados() {
+            const dadosArmazenados = localStorage.getItem('auditSysData');
+            if (dadosArmazenados) {
+                dados = JSON.parse(dadosArmazenados);
+            }
+            atualizarUI();
+        }
+
+        // Guardar dados no localStorage
+        function guardarDados() {
+            localStorage.setItem('auditSysData', JSON.stringify(dados));
+        }
+
+        // Enviar dados para AppScript (sync para Google Sheets)
+        async function enviarParaAppScript(operacao, dados) {
+            if (!APPSCRIPT_URL) {
+                console.log('⚠️ AppScript não configurado - usando apenas localStorage');
+                return false;
+            }
+
+            try {
+                const resposta = await fetch(APPSCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        operacao: operacao,
+                        ...dados
+                    })
+                });
+
+                const resultado = await resposta.json();
+                
+                if (resultado.status === 'success') {
+                    console.log('✅ Sincronizado com Google Sheets:', resultado.message);
+                    return true;
+                } else {
+                    console.error('❌ Erro no AppScript:', resultado.message);
+                    return false;
+                }
+            } catch (erro) {
+                console.error('❌ Erro ao conectar ao AppScript:', erro);
+                return false;
+            }
+        }
+
+        // Alternar entre módulos
+        function switchModule(moduleName) {
+            // Esconder todos os módulos
+            document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            // Mostrar módulo selecionado
+            document.getElementById(moduleName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Atualizar UI específica do módulo
+            if (moduleName === 'auditoria') {
+                atualizarListaDepartamentos();
+                renderizarRegistosGuardados();
+            }
+            if (moduleName === 'questoes') atualizarListaQuestoes();
+            if (moduleName === 'relatorio') atualizarListaAuditorias();
+        }
+
+        // =============== MÓDULO INTRO ===============
+        async function salvarIntro(e) {
+            e.preventDefault();
+
+            // Gerar ID automaticamente
+            const data = new Date();
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const dia = String(data.getDate()).padStart(2, '0');
+            const sequencia = String(dados.introPlaneamentos.length + 1).padStart(3, '0');
+            const idGerado = `AUD-${ano}${mes}${dia}-${sequencia}`;
+
+            // Recolher documentos selecionados
+            const documentosChecked = Array.from(document.querySelectorAll('input[name="documentosRef"]:checked'))
+                .map(checkbox => checkbox.value);
+
+            const novoIntro = {
+                id: idGerado,
+                departamento: document.getElementById('departamento').value,
+                auditorCoord: document.getElementById('auditorCoord').value,
+                auditor: document.getElementById('auditor').value,
+                auditado: document.getElementById('auditado').value,
+                documentosRef: documentosChecked.join('; '),
+                registadoPor: document.getElementById('registadoPor').value,
+                colaboradores: document.getElementById('colaboradores').value,
+                requisitos: document.getElementById('requisitos').value,
+                horaPrevista: document.getElementById('horaPrevista').value,
+                horaAuditoria: document.getElementById('horaAuditoria').value,
+                dataAuditoria: document.getElementById('dataAuditoria').value,
+                dataCriacao: new Date().toISOString()
+            };
+
+            dados.introPlaneamentos.push(novoIntro);
+            guardarDados();
+
+            // Enviar para Google Sheets via AppScript
+            await enviarParaAppScript('salvarIntro', novoIntro);
+
+            limparIntro();
+            atualizarListaIntro();
+            alert(`Planeamento guardado com sucesso!\nID gerado: ${idGerado}`);
+        }
+
+        function limparIntro() {
+            document.getElementById('formIntro').reset();
+            // Desselecionar todos os checkboxes de documentos
+            document.querySelectorAll('input[name="documentosRef"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+
+        function atualizarListaIntro() {
+            const lista = document.getElementById('listaIntro');
+            
+            if (dados.introPlaneamentos.length === 0) {
+                lista.innerHTML = '<div class="empty-state"><p>Nenhum planeamento registado ainda.</p></div>';
+                return;
+            }
+
+            lista.innerHTML = dados.introPlaneamentos.map(intro => {
+                const nomeDept = getNomeDepartamento(intro.departamento);
+                return `
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <div class="card-header">${intro.id} - ${intro.departamento} (${nomeDept})</div>
+                            <p><strong>Auditor Coordenador:</strong> ${intro.auditorCoord}</p>
+                            <p><strong>Auditor:</strong> ${intro.auditor}</p>
+                            <p><strong>Auditado:</strong> ${intro.auditado}</p>
+                            <p><strong>Data:</strong> ${intro.dataAuditoria} às ${intro.horaPrevista}</p>
+                        </div>
+                        <div class="actions" style="flex-direction: column;">
+                            <button class="btn btn-secondary btn-small" onclick="editarIntro('${intro.id}')">Editar</button>
+                            <button class="btn btn-danger btn-small" onclick="eliminarIntro('${intro.id}')">Remover</button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function editarIntro(id) {
+            const intro = dados.introPlaneamentos.find(i => i.id === id);
+            if (!intro) return;
+
+            document.getElementById('editIdIntro').value = id;
+            document.getElementById('editId').value = intro.id;
+            document.getElementById('editDepartamento').value = intro.departamento;
+            document.getElementById('editAuditorCoord').value = intro.auditorCoord;
+            document.getElementById('editAuditor').value = intro.auditor;
+
+            document.getElementById('modalAuditoria').classList.add('show');
+        }
+
+        function guardarEdicaoIntro(e) {
+            e.preventDefault();
+            const id = document.getElementById('editIdIntro').value;
+            const intro = dados.introPlaneamentos.find(i => i.id === id);
+
+            if (intro) {
+                intro.departamento = document.getElementById('editDepartamento').value;
+                intro.auditorCoord = document.getElementById('editAuditorCoord').value;
+                intro.auditor = document.getElementById('editAuditor').value;
+                guardarDados();
+                atualizarListaIntro();
+                fecharModal();
+                alert('Alterações guardadas com sucesso!');
+            }
+        }
+
+        function eliminarIntro(id) {
+            if (confirm('Tem certeza que deseja eliminar este planeamento?')) {
+                dados.introPlaneamentos = dados.introPlaneamentos.filter(i => i.id !== id);
+                guardarDados();
+                atualizarListaIntro();
+            }
+        }
+
+        function fecharModal() {
+            document.getElementById('modalAuditoria').classList.remove('show');
+        }
+
+        // =============== MÓDULO AUDITORIA ===============
+        function atualizarListaDepartamentos() {
+            const selectDept = document.getElementById('selectDept');
+            
+            // Usar departamentos predefinidos, ordenados
+            const deptCodigos = Object.keys(DEPARTAMENTOS).sort();
+
+            selectDept.innerHTML = '<option value="">-- Selecione um departamento --</option>' +
+                deptCodigos.map(codigo => {
+                    const nome = DEPARTAMENTOS[codigo];
+                    const display = `${codigo} - ${nome}`;
+                    return `<option value="${codigo}">${display}</option>`;
+                }).join('');
+        }
+
+        function carregarQuestoes() {
+            const dept = document.getElementById('selectDept').value;
+            const container = document.getElementById('questoesContainer');
+
+            if (!dept) {
+                container.innerHTML = '';
+                return;
+            }
+
+            console.log(`🔍 Procurando questões para: ${dept}`);
+            console.log(`📊 Total de questões disponíveis: ${dados.questoes.length}`);
+            console.log(`📋 Questões por departamento:`, dados.questoes.reduce((acc, q) => {
+                acc[q.departamento] = (acc[q.departamento] || 0) + 1;
+                return acc;
+            }, {}));
+
+            const questoesDept = dados.questoes.filter(q => q.departamento === dept);
+            console.log(`✓ Encontradas ${questoesDept.length} questões para ${dept}`);
+
+            if (questoesDept.length === 0) {
+                container.innerHTML = '<div class="alert alert-warning">Nenhuma questão para este departamento.</div>';
+                return;
+            }
+
+            const nomeDept = getNomeDepartamento(dept);
+
+            container.innerHTML = '<form id="formAuditoria" onsubmit="salvarAuditoria(event)">' +
+                '<h3 class="section-title">✓ Questões - ' + dept + ' (' + nomeDept + ')</h3>' +
+                '<p style="color: #28a745; margin-bottom: 20px;">Total de questões: <strong>' + questoesDept.length + '</strong></p>' +
+                '<div class="form-group">' +
+                '<label for="idAuditoria">ID da Auditoria *</label>' +
+                '<input type="text" id="idAuditoria" placeholder="ex: Gerado automaticamente" readonly style="background: #f0f0f0; cursor: not-allowed;">' +
+                '<small style="display: block; margin-top: 5px; color: #666;">O ID será gerado automaticamente ao guardar</small>' +
+                '</div>' +
+                questoesDept.map((q, idx) => `
+                    <div class="question-item">
+                        <div class="question-header">${idx + 1}. ${q.questao}</div>
+                        <div class="question-meta">Foco: ${q.foco}</div>
+                        
+                        <div class="form-group">
+                            <label for="evidencia_${q.id}">Constatação / Evidência</label>
+                            <textarea id="evidencia_${q.id}" placeholder="Descreva a evidência encontrada..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="om_${q.id}">OM (Observação de Melhoria)</label>
+                            <textarea id="om_${q.id}" placeholder="Recomendações de melhoria..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>NC (Não-Conformidade)</label>
+                            <div class="score-group">
+                                <div class="score-option">
+                                    <input type="radio" name="nc_${q.id}" value="Nenhuma" id="nc_none_${q.id}" checked>
+                                    <label for="nc_none_${q.id}">Nenhuma</label>
+                                </div>
+                                <div class="score-option">
+                                    <input type="radio" name="nc_${q.id}" value="Menor" id="nc_menor_${q.id}">
+                                    <label for="nc_menor_${q.id}">Menor</label>
+                                </div>
+                                <div class="score-option">
+                                    <input type="radio" name="nc_${q.id}" value="Maior" id="nc_maior_${q.id}">
+                                    <label for="nc_maior_${q.id}">Maior</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="margin: 20px 0;">
+                    </div>
+                `).join('') +
+                '<div class="actions" style="margin-top: 30px;">' +
+                '<button type="submit" class="btn btn-primary">Guardar Auditoria</button>' +
+                '<button type="button" class="btn btn-secondary" onclick="document.getElementById(\'selectDept\').value = \'\'; document.getElementById(\'questoesContainer\').innerHTML = \'\';">Cancelar</button>' +
+                '</div>' +
+                '</form>';
+        }
+
+        async function salvarAuditoria(e) {
+            e.preventDefault();
+
+            const dept = document.getElementById('selectDept').value;
+            const questoesDept = dados.questoes.filter(q => q.departamento === dept);
+            const nomeDept = getNomeDepartamento(dept);
+
+            // Gerar ID automaticamente
+            const data = new Date();
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const dia = String(data.getDate()).padStart(2, '0');
+            const sequencia = String(dados.auditorias.length + 1).padStart(3, '0');
+            const idGerado = `AUD-${ano}${mes}${dia}-${sequencia}`;
+
+            const novaAuditoria = {
+                id: idGerado,
+                departamento: dept,
+                nomeDepartamento: nomeDept,
+                dataCriacao: new Date().toISOString(),
+                respostas: {}
+            };
+
+            // Array para guardar os registos que vão ser enviados
+            const registosParaEnviar = [];
+
+            questoesDept.forEach(q => {
+                const evidencia = document.getElementById(`evidencia_${q.id}`).value;
+                const om = document.getElementById(`om_${q.id}`).value;
+                const nc = document.querySelector(`input[name="nc_${q.id}"]:checked`).value;
+
+                novaAuditoria.respostas[q.id] = {
+                    questao: q.questao,
+                    foco: q.foco,
+                    evidencia: evidencia,
+                    om: om,
+                    nc: nc
+                };
+
+                // Criar registo individual para o separador AUDITORIA
+                const registo = {
+                    id: idGerado,
+                    departamento: dept,
+                    investigacao: q.questao,
+                    foco: q.foco,
+                    evidencia: evidencia,
+                    om: om,
+                    nc: nc,
+                    dataCriacao: new Date().toISOString()
+                };
+
+                dados.auditoriasRegistadas.push(registo);
+                registosParaEnviar.push(registo);
+            });
+
+            dados.auditorias.push(novaAuditoria);
+            guardarDados();
+            renderizarRegistosGuardados();
+
+            // Enviar registos para Google Sheets via AppScript
+            if (registosParaEnviar.length > 0) {
+                await enviarParaAppScript('salvarAuditoria', {
+                    id: idGerado,
+                    departamento: dept,
+                    registos: registosParaEnviar
+                });
+            }
+            
+            // Oferecer exportação para Google Sheets (fallback se AppScript falhar)
+            const confirmarExport = confirm(
+                `Auditoria gravada com sucesso!\nID: ${idGerado}\n\nSe AppScript não está configurado, deseja exportar os registos para CSV?\n(Pode depois importar no Google Sheets)`
+            );
+            
+            if (confirmarExport && !APPSCRIPT_URL) {
+                exportarRegistosAuditoria();
+            }
+
+            document.getElementById('selectDept').value = '';
+            document.getElementById('questoesContainer').innerHTML = '';
+        }
+
+        // Exportar registos de auditoria em CSV
+        function exportarRegistosAuditoria() {
+            if (dados.auditoriasRegistadas.length === 0) {
+                alert('Nenhum registo de auditoria para exportar.');
+                return;
+            }
+
+            // Cabeçalhos conforme especificado
+            const headers = ['ID', 'DEPARTAMENTO', 'Investigação (Questão de Auditoria)', 'Foco / Requisito', 'CONSTATAÇÃO / EVIDÊNCIA', 'OM', 'NC'];
+            
+            // Criar linhas CSV
+            const linhas = [headers.join('\t')];
+            
+            dados.auditoriasRegistadas.forEach(reg => {
+                const linha = [
+                    reg.id,
+                    reg.departamento,
+                    `"${reg.investigacao.replace(/"/g, '""')}"`,
+                    `"${reg.foco.replace(/"/g, '""')}"`,
+                    `"${reg.evidencia.replace(/"/g, '""')}"`,
+                    `"${reg.om.replace(/"/g, '""')}"`,
+                    reg.nc
+                ];
+                linhas.push(linha.join('\t'));
+            });
+
+            const csv = linhas.join('\n');
+
+            // Download do ficheiro
+            const elemento = document.createElement('a');
+            elemento.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+            elemento.setAttribute('download', `auditoria_registos_${new Date().toISOString().slice(0, 10)}.csv`);
+            elemento.style.display = 'none';
+            document.body.appendChild(elemento);
+            elemento.click();
+            document.body.removeChild(elemento);
+
+            alert('Ficheiro CSV exportado com sucesso!\nPode agora importar no Google Sheets.');
+        }
+
+        // Renderizar registos guardados
+        function renderizarRegistosGuardados() {
+            const container = document.getElementById('registosContainer');
+            
+            if (!dados.auditoriasRegistadas || dados.auditoriasRegistadas.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Nenhum registo guardado ainda.</div>';
+                return;
+            }
+
+            let html = '<div style="overflow-x: auto;"><table style="width: 100%; border-collapse: collapse; font-size: 12px;">';
+            html += '<thead style="background-color: #f0f0f0;"><tr>';
+            html += '<th style="border: 1px solid #ccc; padding: 8px; text-align: left;">ID</th>';
+            html += '<th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Departamento</th>';
+            html += '<th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Investigação</th>';
+            html += '<th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Foco</th>';
+            html += '<th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Constatação</th>';
+            html += '<th style="border: 1px solid #ccc; padding: 8px; text-align: left;">OM</th>';
+            html += '<th style="border: 1px solid #ccc; padding: 8px; text-align: center;">NC</th>';
+            html += '</tr></thead><tbody>';
+
+            dados.auditoriasRegistadas.forEach((reg, idx) => {
+                const bgcolor = idx % 2 === 0 ? '#ffffff' : '#f9f9f9';
+                html += `<tr style="background-color: ${bgcolor};">`;
+                html += `<td style="border: 1px solid #ccc; padding: 8px;">${reg.id}</td>`;
+                html += `<td style="border: 1px solid #ccc; padding: 8px;">${reg.departamento}</td>`;
+                html += `<td style="border: 1px solid #ccc; padding: 8px; max-width: 200px; white-space: pre-wrap;">${reg.investigacao}</td>`;
+                html += `<td style="border: 1px solid #ccc; padding: 8px; max-width: 150px;">${reg.foco}</td>`;
+                html += `<td style="border: 1px solid #ccc; padding: 8px; max-width: 200px; white-space: pre-wrap;">${reg.evidencia}</td>`;
+                html += `<td style="border: 1px solid #ccc; padding: 8px; max-width: 150px; white-space: pre-wrap;">${reg.om}</td>`;
+                html += `<td style="border: 1px solid #ccc; padding: 8px; text-align: center;">`;
+                html += `<span style="background-color: ${reg.nc === 'Maior' ? '#ff6b6b' : reg.nc === 'Menor' ? '#ffa500' : '#90EE90'}; padding: 4px 8px; border-radius: 3px; color: black; font-weight: bold;">${reg.nc}</span>`;
+                html += `</td></tr>`;
+            });
+
+            html += '</tbody></table></div>';
+            
+            // Adicionar botão de exportação
+            html += '<div style="margin-top: 20px; text-align: center;">';
+            html += `<button onclick="exportarRegistosAuditoria()" class="btn btn-secondary">📥 Exportar para CSV</button>`;
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        // =============== MÓDULO QUESTÕES ===============
+        async function adicionarQuestao() {
+            const deptSelect = document.getElementById('deptQuestao');
+            const dept = deptSelect.value.trim();
+            const questao = document.getElementById('textoQuestao').value.trim();
+            const foco = document.getElementById('focoRequisito').value.trim();
+
+            if (!dept || !questao) {
+                alert('Por favor, preencha os campos obrigatórios (Departamento e Questão)');
+                return;
+            }
+
+            const novaQuestao = {
+                id: 'Q' + (dados.questoes.length + 1),
+                departamento: dept,
+                questao: questao,
+                foco: foco || 'Sem especificação'
+            };
+
+            dados.questoes.push(novaQuestao);
+            guardarDados();
+
+            // Enviar questão para Google Sheets via AppScript
+            await enviarParaAppScript('adicionarQuestao', {
+                departamento: dept,
+                investigacao: questao,
+                foco: foco || 'Sem especificação'
+            });
+
+            deptSelect.value = '';
+            document.getElementById('textoQuestao').value = '';
+            document.getElementById('focoRequisito').value = '';
+
+            atualizarListaQuestoes();
+            alert('Questão adicionada com sucesso!');
+        }
+
+        function atualizarListaQuestoes() {
+            const lista = document.getElementById('listaQuestoes');
+
+            if (dados.questoes.length === 0) {
+                lista.innerHTML = '<div class="empty-state"><p>Nenhuma questão registada ainda.</p></div>';
+                return;
+            }
+
+            const departamentos = [...new Set(dados.questoes.map(q => q.departamento))].sort();
+
+            lista.innerHTML = departamentos.map(dept => {
+                const nomeDept = getNomeDepartamento(dept);
+                const questoesDept = dados.questoes.filter(q => q.departamento === dept);
+                return `
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">🏢 ${dept} - ${nomeDept}</h4>
+                        ${questoesDept.map(q => `
+                            <div class="question-item">
+                                <div class="question-header">${q.id}: ${q.questao}</div>
+                                <div class="question-meta">Foco: ${q.foco}</div>
+                                <div class="actions">
+                                    <button class="btn btn-danger btn-small" onclick="eliminarQuestao('${q.id}')">Remover</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function eliminarQuestao(id) {
+            if (confirm('Tem certeza que deseja eliminar esta questão?')) {
+                dados.questoes = dados.questoes.filter(q => q.id !== id);
+                guardarDados();
+                atualizarListaQuestoes();
+            }
+        }
+
+        // =============== MÓDULO RELATÓRIO ===============
+        function atualizarListaAuditorias() {
+            const select = document.getElementById('selectAuditoriaRel');
+
+            if (dados.auditorias.length === 0) {
+                select.innerHTML = '<option value="">-- Nenhuma auditoria registada --</option>';
+                return;
+            }
+
+            select.innerHTML = '<option value="">-- Selecione uma auditoria --</option>' +
+                dados.auditorias.map((a, idx) => {
+                    const display = `${a.id} - ${a.departamento} (${a.nomeDepartamento})`;
+                    return `<option value="${idx}">${display}</option>`;
+                }).join('');
+        }
+
+        function carregarRelatorio() {
+            const idx = document.getElementById('selectAuditoriaRel').value;
+            const container = document.getElementById('relatorioContainer');
+
+            if (idx === '') {
+                container.innerHTML = '';
+                return;
+            }
+
+            const auditoria = dados.auditorias[idx];
+            const intro = dados.introPlaneamentos.find(i => i.id === auditoria.id);
+
+            let html = '<div id="conteudoRelatorio">';
+            html += '<div style="text-align: center; margin-bottom: 30px;">';
+            html += '<h1 style="color: #667eea;">Relatório de Auditoria</h1>';
+            html += '<p style="color: #999;">Auditoria ID: ' + auditoria.id + '</p>';
+            html += '</div>';
+
+            if (intro) {
+                html += '<div class="report-section">';
+                html += '<div class="report-title">Informações de Planeamento</div>';
+                const nomeDept = getNomeDepartamento(intro.departamento);
+                html += '<div class="report-item"><strong>Departamento:</strong> ' + intro.departamento + ' - ' + nomeDept + '</div>';
+                html += '<div class="report-item"><strong>Auditor Coordenador:</strong> ' + intro.auditorCoord + '</div>';
+                html += '<div class="report-item"><strong>Auditor:</strong> ' + intro.auditor + '</div>';
+                html += '<div class="report-item"><strong>Data:</strong> ' + intro.dataAuditoria + '</div>';
+                html += '</div>';
+            } else {
+                html += '<div class="report-section">';
+                html += '<div class="report-title">Informações de Auditoria</div>';
+                const nomeDept = auditoria.nomeDepartamento || getNomeDepartamento(auditoria.departamento);
+                html += '<div class="report-item"><strong>Departamento:</strong> ' + auditoria.departamento + ' - ' + nomeDept + '</div>';
+                html += '</div>';
+            }
+
+            html += '<div class="report-section">';
+            html += '<div class="report-title">Constatações e Evidências</div>';
+
+            Object.values(auditoria.respostas).forEach((resposta, idx) => {
+                const ncBadge = resposta.nc === 'Nenhuma' ? 'badge-success' : (resposta.nc === 'Menor' ? 'badge-warning' : 'badge-danger');
+                html += `
+                    <div class="report-item">
+                        <div style="margin-bottom: 10px;">
+                            <strong>Questão ${idx + 1}:</strong> ${resposta.questao}
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <span class="badge ${ncBadge}">${resposta.nc}</span>
+                        </div>
+                        ${resposta.evidencia ? '<div><strong>Evidência:</strong> ' + resposta.evidencia + '</div>' : ''}
+                        ${resposta.om ? '<div style="margin-top: 8px; color: #28a745;"><strong>Melhorias Propostas:</strong> ' + resposta.om + '</div>' : ''}
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+
+            // Resumo
+            const todasRespostas = Object.values(auditoria.respostas);
+            const nenhuma = todasRespostas.filter(r => r.nc === 'Nenhuma').length;
+            const menor = todasRespostas.filter(r => r.nc === 'Menor').length;
+            const maior = todasRespostas.filter(r => r.nc === 'Maior').length;
+
+            html += '<div class="report-section">';
+            html += '<div class="report-title">Resumo</div>';
+            html += '<div class="report-item"><span class="badge badge-success">Conformes: ' + nenhuma + '</span></div>';
+            html += '<div class="report-item"><span class="badge badge-warning">NC Menores: ' + menor + '</span></div>';
+            html += '<div class="report-item"><span class="badge badge-danger">NC Maiores: ' + maior + '</span></div>';
+            html += '</div>';
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function imprimirRelatorio() {
+            window.print();
+        }
+
+        function exportarPDF() {
+            alert('Para exportar em PDF, use a função de impressão do navegador (Ctrl+P) e selecione "Guardar como PDF".');
+        }
+
+        // =============== INICIALIZAÇÃO ===============
+        function atualizarUI() {
+            atualizarListaDepartamentos();
+            atualizarListaIntro();
+            atualizarListaQuestoes();
+            renderizarRegistosGuardados();
+        }
+
+        function renderizarDocumentos() {
+            const container = document.getElementById('documentsContainer');
+            if (!container) return;
+            
+            container.innerHTML = DOCUMENTOS_REFERENCIA.map(doc => `
+                <div style="margin-bottom: 12px;">
+                    <input type="checkbox" id="doc_${doc.replace(/\s+/g, '_')}" name="documentosRef" value="${doc}">
+                    <label for="doc_${doc.replace(/\s+/g, '_')}" style="margin: 0; font-weight: normal; display: inline;"> ${doc}</label>
+                </div>
+            `).join('');
+        }
+
+        // Carregar dados ao iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Sistema de Auditorias inicializado');
+            renderizarDocumentos();
+            carregarDadosDoSheet().then(() => {
+                console.log('✅ Dados carregados com sucesso');
+                carregarDados();
+            }).catch((erro) => {
+                console.error('❌ Erro ao carregar dados:', erro);
+                carregarDados();
+            });
+        });
+    </script>
+</body>
+</html>

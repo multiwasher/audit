@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuditHub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8fafc;
+  --white:#ffffff;
+  --slate50:#f8fafc;
+  --slate100:#f1f5f9;
+  --slate200:#e2e8f0;
+  --slate300:#cbd5e1;
+  --slate400:#94a3b8;
+  --slate500:#64748b;
+  --slate600:#475569;
+  --slate700:#334155;
+  --slate800:#1e293b;
+  --slate900:#0f172a;
+  --blue:#2563eb;
+  --blue-light:#eff6ff;
+  --emerald:#059669;
+  --emerald-light:#ecfdf5;
+  --amber:#d97706;
+  --amber-light:#fffbeb;
+  --rose:#e11d48;
+  --rose-light:#fff1f2;
+  --purple:#7c3aed;
+  --purple-light:#f5f3ff;
+  --r:24px;
+  --r-lg:32px;
+  --r-xl:40px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--slate900);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* HEADER */
+.header{background:var(--slate900);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.75rem;cursor:pointer;text-decoration:none}
+.logo-icon{background:var(--blue);width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;transition:transform .2s}
+.logo:hover .logo-icon{transform:rotate(12deg)}
+.logo-text{display:flex;flex-direction:column;line-height:1}
+.logo-name{font-size:17px;font-weight:900;color:#fff;letter-spacing:-.02em}
+.logo-name span{color:#60a5fa}
+.logo-sub{font-size:9px;font-weight:700;color:var(--slate500);letter-spacing:.25em;text-transform:uppercase;margin-top:2px}
+.header-back{display:flex;align-items:center;gap:.5rem;color:var(--slate400);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:.5rem 1rem;border-radius:10px;transition:all .15s}
+.header-back:hover{background:rgba(255,255,255,.1);color:#fff}
+.header-back svg{width:14px;height:14px}
+
+/* VIEWS */
+.view{display:none;animation:fadeUp .3s ease}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* MAIN CONTAINER */
+.container{max-width:1200px;margin:0 auto;padding:2.5rem 2rem}
+
+/* MENU CARDS */
+.menu-hero{margin-bottom:3rem}
+.menu-hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;letter-spacing:-.04em;font-style:italic;text-transform:uppercase;line-height:1;margin-bottom:.5rem}
+.menu-hero p{color:var(--slate400);font-weight:500;font-size:15px}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.menu-card{background:var(--white);border-radius:var(--r-xl);padding:2.5rem;border:1px solid var(--slate100);cursor:pointer;transition:all .25s;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.menu-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.menu-card-bg{position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;opacity:.5;transition:transform .4s}
+.menu-card:hover .menu-card-bg{transform:scale(1.4)}
+.menu-card-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:1.5rem;position:relative}
+.menu-card h2{font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:.5rem;position:relative}
+.menu-card p{font-size:13px;color:var(--slate400);line-height:1.6;margin-bottom:2rem;position:relative}
+.menu-card-cta{display:flex;align-items:center;gap:.4rem;font-size:10px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;position:relative}
+.menu-card-cta svg{width:12px;height:12px;transition:transform .2s}
+.menu-card:hover .menu-card-cta svg{transform:translateX(3px)}
+
+.card-blue .menu-card-bg{background:var(--blue-light)}
+.card-blue .menu-card-icon{background:var(--blue-light);color:var(--blue)}
+.card-blue h2{color:#1d4ed8}
+.card-blue .menu-card-cta{color:var(--blue)}
+.card-emerald .menu-card-bg{background:var(--emerald-light)}
+.card-emerald .menu-card-icon{background:var(--emerald-light);color:var(--emerald)}
+.card-emerald h2{color:#065f46}
+.card-emerald .menu-card-cta{color:var(--emerald)}
+.card-slate .menu-card-bg{background:var(--slate100)}
+.card-slate .menu-card-icon{background:var(--slate100);color:var(--slate700)}
+.card-slate h2{color:var(--slate800)}
+.card-slate .menu-card-cta{color:var(--slate600)}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:2rem}
+.page-header h2{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;letter-spacing:-.03em;font-style:italic;text-transform:uppercase;margin-bottom:.25rem}
+.page-header p{color:var(--slate400);font-size:13px;font-weight:500}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
+
+/* BTNS */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.25rem;border-radius:14px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;border:none;line-height:1}
+.btn:active{transform:scale(.97)}
+.btn-dark{background:var(--slate900);color:#fff}
+.btn-dark:hover{background:black}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.25)}
+.btn-blue:hover{background:#1d4ed8}
+.btn-emerald{background:var(--emerald);color:#fff;box-shadow:0 4px 14px rgba(5,150,105,.25)}
+.btn-emerald:hover{background:#047857}
+.btn-ghost{background:transparent;color:var(--slate500);border:1px solid var(--slate200)}
+.btn-ghost:hover{background:var(--slate50);color:var(--slate700)}
+.btn-danger-ghost{background:transparent;color:var(--slate300);border:none}
+.btn-danger-ghost:hover{color:var(--rose);background:var(--rose-light)}
+.btn-sm{padding:.4rem .85rem;font-size:12px}
+
+/* CARD BASE */
+.card{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--slate100);box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+
+/* PLANNING TABLE */
+.table-wrap{overflow-x:auto}
+table.main-table{width:100%;border-collapse:collapse}
+table.main-table thead{background:var(--slate50);border-bottom:1px solid var(--slate100)}
+table.main-table th{padding:1rem 1.5rem;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.2em;color:var(--slate400);text-align:left}
+table.main-table td{padding:1rem 1.5rem;border-bottom:1px solid var(--slate50);vertical-align:middle}
+table.main-table tr:last-child td{border-bottom:none}
+table.main-table tr:hover td{background:rgba(248,250,252,.6)}
+.inline-input{background:transparent;border:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--slate800);font-weight:700;width:100%;padding:0;outline:none}
+.inline-input::placeholder{color:var(--slate300)}
+.inline-input:focus{color:var(--slate900)}
+.inline-date{background:var(--slate100);border:none;font-family:'DM Mono',monospace;font-size:11px;color:var(--slate700);font-weight:600;padding:.4rem .8rem;border-radius:8px;outline:none}
+.inline-date:focus{box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.foco-pill{display:flex;align-items:center;gap:.3rem;background:var(--slate100);border:1px solid var(--slate200);border-radius:8px;padding:.3rem .7rem}
+.foco-input{background:transparent;border:none;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);width:80px;outline:none}
+
+/* DEPT SELECTOR */
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.dept-card{background:var(--white);border:2px solid var(--slate100);border-radius:var(--r-lg);padding:1.75rem 1.5rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.dept-card:hover{border-color:var(--emerald);transform:translateY(-3px);box-shadow:0 12px 30px rgba(5,150,105,.12)}
+.dept-card.selected{border-color:var(--emerald);background:var(--emerald-light)}
+.dept-card-dot{position:absolute;top:-10px;right:-10px;width:50px;height:50px;border-radius:50%;background:var(--emerald-light);transition:transform .3s}
+.dept-card:hover .dept-card-dot,.dept-card.selected .dept-card-dot{transform:scale(3)}
+.dept-card-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.2em;color:var(--emerald);margin-bottom:.5rem;position:relative}
+.dept-card-name{font-size:22px;font-weight:900;letter-spacing:-.02em;color:var(--slate900);position:relative;line-height:1.1}
+.dept-card-count{font-size:11px;color:var(--slate400);font-weight:600;margin-top:.4rem;position:relative;font-family:'DM Mono',monospace}
+.dept-card-arrow{position:absolute;bottom:1.25rem;right:1.25rem;width:32px;height:32px;background:var(--emerald);border-radius:8px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:#fff}
+.dept-card:hover .dept-card-arrow,.dept-card.selected .dept-card-arrow{opacity:1}
+
+/* QUESTION CARDS */
+.q-list{display:flex;flex-direction:column;gap:.75rem}
+.q-card{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--slate100);padding:1.75rem;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.q-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.q-card.state-nc{border-color:rgba(225,29,72,.3);background:var(--rose-light)}
+.q-card.state-om{border-color:rgba(217,119,6,.3);background:var(--amber-light)}
+.q-card.state-ok{border-color:rgba(5,150,105,.25);background:var(--emerald-light)}
+.q-header{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.75rem}
+.q-num{flex-shrink:0;background:var(--slate100);color:var(--slate500);font-size:10px;font-weight:900;font-family:'DM Mono',monospace;padding:.25rem .55rem;border-radius:6px;margin-top:2px}
+.q-text{font-size:13px;font-weight:700;color:var(--slate800);line-height:1.55;flex:1}
+.q-new{display:inline-flex;align-items:center;font-size:8px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;background:var(--emerald-light);color:var(--emerald);border:1px solid rgba(5,150,105,.2);padding:2px 6px;border-radius:5px;margin-left:6px;vertical-align:middle}
+.q-foco{display:inline-flex;align-items:center;gap:.25rem;background:var(--slate100);border:1px solid var(--slate200);border-radius:6px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);padding:3px 8px;margin-bottom:.75rem}
+.q-body{display:grid;grid-template-columns:1fr 160px;gap:1rem;align-items:start}
+.ev-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--slate400);margin-bottom:.4rem}
+.ev-textarea{width:100%;background:var(--slate50);border:1px solid var(--slate100);border-radius:12px;padding:.75rem 1rem;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--slate700);resize:vertical;min-height:72px;transition:all .15s;outline:none}
+.ev-textarea::placeholder{color:var(--slate300)}
+.ev-textarea:focus{background:var(--white);border-color:var(--slate300);box-shadow:0 0 0 4px rgba(37,99,235,.06)}
+.q-btns{display:flex;flex-direction:column;gap:.5rem}
+.q-btns-row{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.q-btns-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--slate400);margin-bottom:.3rem}
+.tog{padding:.55rem .5rem;border-radius:10px;border:2px solid var(--slate100);background:var(--white);font-size:11px;font-weight:900;font-family:'DM Sans',sans-serif;color:var(--slate300);cursor:pointer;transition:all .15s;text-align:center;letter-spacing:.04em}
+.tog:hover{border-color:var(--slate300);color:var(--slate500)}
+.tog.t-om{background:var(--amber);border-color:var(--amber);color:#fff;box-shadow:0 4px 12px rgba(217,119,6,.3);transform:scale(1.02)}
+.tog.t-nc{background:var(--rose);border-color:var(--rose);color:#fff;box-shadow:0 4px 12px rgba(225,29,72,.3);transform:scale(1.02)}
+.tog.t-ok{background:var(--emerald);border-color:var(--emerald);color:#fff;box-shadow:0 4px 12px rgba(5,150,105,.3);transform:scale(1.02)}
+.q-del{opacity:0;transition:opacity .15s;padding:.35rem;border:none;background:transparent;cursor:pointer;color:var(--slate300);border-radius:6px}
+.q-del:hover{color:var(--rose);background:var(--rose-light)}
+.q-card:hover .q-del{opacity:1}
+
+/* AUDIT HEADER */
+.audit-header{background:var(--white);border-radius:var(--r-xl);padding:2rem 2.5rem;border:1px solid var(--slate100);border-left:12px solid var(--emerald);display:flex;align-items:center;justify-content:space-between;gap:1.5rem;margin-bottom:2rem;flex-wrap:wrap;box-shadow:0 4px 20px rgba(5,150,105,.08)}
+.audit-header-left{display:flex;align-items:center;gap:1.25rem}
+.audit-icon{background:var(--emerald-light);width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--emerald)}
+.audit-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.25em;color:var(--emerald);margin-bottom:.2rem}
+.audit-dept{font-size:clamp(1.5rem,4vw,3rem);font-weight:900;letter-spacing:-.04em;text-transform:uppercase;font-style:italic;line-height:1}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.stat-card{background:var(--white);border:1px solid var(--slate100);border-radius:var(--r);padding:1.25rem 1.5rem}
+.stat-num{font-size:2rem;font-weight:900;font-family:'DM Mono',monospace;letter-spacing:-.03em;display:block;margin-bottom:2px}
+.stat-lbl{font-size:10px;font-weight:700;color:var(--slate400);text-transform:uppercase;letter-spacing:.08em}
+.stat-card.s-total .stat-num{color:var(--slate700)}
+.stat-card.s-ok{border-color:rgba(5,150,105,.2);background:var(--emerald-light)}
+.stat-card.s-ok .stat-num{color:var(--emerald)}
+.stat-card.s-om{border-color:rgba(217,119,6,.2);background:var(--amber-light)}
+.stat-card.s-om .stat-num{color:var(--amber)}
+.stat-card.s-nc{border-color:rgba(225,29,72,.2);background:var(--rose-light)}
+.stat-card.s-nc .stat-num{color:var(--rose)}
+.stat-card.s-pend .stat-num{color:var(--slate400)}
+
+/* REPORT */
+.report-wrap{background:var(--white);border-radius:var(--r-xl);border:1px solid var(--slate100);padding:3rem;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.report-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:8px solid var(--slate900);padding-bottom:2rem;margin-bottom:2rem;flex-wrap:wrap;gap:1.5rem}
+.report-title{font-size:clamp(3rem,8vw,5rem);font-weight:900;letter-spacing:-.05em;text-transform:uppercase;font-style:italic;line-height:1}
+.report-dept-badge{background:var(--slate900);color:#fff;padding:.75rem 2rem;border-radius:16px;font-size:2rem;font-weight:900;text-transform:uppercase;letter-spacing:-.02em}
+.report-meta{font-size:9px;font-weight:900;color:var(--slate400);letter-spacing:.2em;text-transform:uppercase;margin-top:.5rem}
+.report-item{border-bottom:1px solid var(--slate100);padding:2rem 0}
+.report-item:last-child{border-bottom:none}
+.report-item-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.report-item-q{font-size:1.1rem;font-weight:900;color:var(--slate800);max-width:700px;line-height:1.4}
+.report-badge{padding:.35rem 1rem;border-radius:8px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em}
+.rb-nc{background:var(--rose);color:#fff}
+.rb-om{background:var(--amber);color:#fff}
+.rb-ok{background:var(--emerald);color:#fff}
+.rb-pend{background:var(--slate200);color:var(--slate500)}
+.report-ev{background:var(--slate50);border:1px solid var(--slate100);border-radius:12px;padding:1rem 1.25rem;font-size:12px;color:var(--slate500);font-style:italic;line-height:1.6}
+.sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:4rem;padding-top:2rem}
+.sign-line{border-bottom:3px solid var(--slate900);padding-bottom:1rem;margin-bottom:.75rem}
+.sign-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.25em;color:var(--slate900)}
+.sign-sub{font-size:9px;color:var(--slate400);font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-top:.25rem}
+
+/* CONFIG */
+.cfg-block{background:var(--white);border:1px solid var(--slate100);border-radius:var(--r-lg);overflow:hidden;margin-bottom:1rem}
+.cfg-block-header{display:flex;align-items:center;gap:.75rem;padding:1rem 1.5rem;background:var(--slate50);border-bottom:1px solid var(--slate100)}
+.cfg-q-row{display:grid;grid-template-columns:90px 1fr 130px 40px;gap:.75rem;align-items:center;padding:.65rem 1.5rem;border-bottom:1px solid var(--slate50);font-size:12px}
+.cfg-q-row:last-child{border-bottom:none}
+.cfg-q-row:hover{background:var(--slate50)}
+.cfg-id{font-family:'DM Mono',monospace;font-size:10px;color:var(--slate400)}
+.cfg-foco{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);background:var(--blue-light);padding:3px 8px;border-radius:5px;display:inline-block}
+.dept-chip{display:inline-flex;align-items:center;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;background:var(--slate100);color:var(--slate600);border-radius:8px;padding:.25rem .65rem}
+
+/* FILTER TABS */
+.filter-tabs{display:flex;gap:.4rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.ftab{padding:.4rem .9rem;border-radius:99px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;border:1px solid var(--slate100);background:var(--white);color:var(--slate400);transition:all .15s}
+.ftab.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 3px 10px rgba(37,99,235,.25)}
+.ftab:hover:not(.active){background:var(--slate50);color:var(--slate600)}
+
+/* CHIPS */
+.chip{display:inline-flex;align-items:center;padding:.25rem .65rem;border-radius:99px;font-size:10px;font-weight:700}
+.chip-blue{background:var(--blue-light);color:var(--blue)}
+.chip-slate{background:var(--slate100);color:var(--slate600)}
+.chip-nc{background:var(--rose-light);color:var(--rose)}
+.chip-om{background:var(--amber-light);color:var(--amber)}
+.chip-ok{background:var(--emerald-light);color:var(--emerald)}
+
+.empty-state{text-align:center;padding:4rem 2rem}
+.empty-state .ei{font-size:3rem;margin-bottom:1rem;opacity:.3}
+.empty-state p{font-size:13px;color:var(--slate400);font-weight:600}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+@media(min-width:640px){.modal-overlay{align-items:center;padding:1.5rem}}
+.modal{background:var(--white);width:100%;max-width:540px;border-radius:28px 28px 0 0;padding:0;overflow:hidden;transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.3,.64,1);max-height:92dvh;display:flex;flex-direction:column}
+@media(min-width:640px){.modal{border-radius:28px;transform:translateY(20px);max-height:88vh}}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-handle{width:40px;height:4px;background:var(--slate200);border-radius:99px;margin:12px auto 0;flex-shrink:0}
+@media(min-width:640px){.modal-handle{display:none}}
+.modal-header{padding:1.25rem 1.5rem 1rem;border-bottom:1px solid var(--slate100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-header h3{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--slate100);color:var(--slate500);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.modal-close:hover{background:var(--slate200);color:var(--slate800)}
+.modal-body{padding:1.25rem 1.5rem;overflow-y:auto;flex:1}
+.modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--slate100);display:flex;gap:.75rem;flex-shrink:0;background:var(--white)}
+.modal-footer .btn{flex:1;justify-content:center;padding:.75rem}
+.mform-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+@media(max-width:480px){.mform-grid{grid-template-columns:1fr}}
+.mform-grid.full{grid-template-columns:1fr}
+.mfield{display:flex;flex-direction:column;gap:5px}
+.mfield label{font-size:11px;font-weight:700;color:var(--slate500);letter-spacing:.04em;text-transform:uppercase}
+.mfield input,.mfield select,.mfield textarea{background:var(--slate50);border:1.5px solid var(--slate100);border-radius:12px;padding:.65rem .9rem;font-size:14px;color:var(--slate900);font-family:'DM Sans',sans-serif;transition:border .15s;width:100%;outline:none}
+.mfield input:focus,.mfield select:focus,.mfield textarea:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 4px rgba(37,99,235,.08)}
+.mfield input::placeholder{color:var(--slate300)}
+.mfield select{cursor:pointer}
+.mfield select option{background:var(--white)}
+.dept-tag{display:inline-flex;align-items:baseline;gap:.35rem;font-size:11px;font-weight:700;color:var(--slate400)}
+.dept-tag span{font-size:10px;font-family:'DM Mono',monospace;color:var(--blue);background:var(--blue-light);padding:1px 5px;border-radius:4px}
+
+@media(max-width:640px){
+  .q-body{grid-template-columns:1fr}
+  .menu-grid{grid-template-columns:1fr}
+  .container{padding:1.5rem 1rem}
+}
+@media print{
+  .no-print{display:none!important}
+  .header{display:none!important}
+  body{background:white!important}
+  .container{padding:0!important;max-width:100%!important}
+  .report-wrap{border:none;box-shadow:none;border-radius:0;padding:2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo" onclick="goHome()">
+    <div class="logo-icon">📋</div>
+    <div class="logo-text">
+      <span class="logo-name">Audit<span>Hub</span></span>
+      <span class="logo-sub">Sistema de Gestão</span>
+    </div>
+  </div>
+  <button class="header-back no-print" id="back-btn" style="display:none" onclick="goHome()">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
+    Painel Principal
+  </button>
+</header>
+
+<!-- VIEW: MENU -->
+<div class="view active" id="view-menu">
+  <div class="container">
+    <div class="menu-hero">
+      <h1>Bem-vindo ao AuditHub</h1>
+      <p>Controlo total sobre os requisitos de conformidade e qualidade.</p>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-card card-blue" onclick="goTo('questoes')">
+        <div class="menu-card-bg"></div>
+        <div class="menu-card-icon">🗂</div>
+        <h2>Questões</h2>
+        <p>Gerencie o banco de questões por departamento. O que definir aqui será a base das suas auditorias.</p>
+        <div class="menu-card-cta">Configurar banco <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
+      </div>
+      <div class="menu-card card-slate" onclick="goTo('planeamento')">
+        <div class="menu-card-bg"></div>
+        <div class="menu-card-icon">📅</div>
+        <h2>Planeamento</h2>
+        <p>Agende auditorias, designe auditores e defina datas para cada departamento operacional.</p>
+        <div class="menu-card-cta">Ver agenda <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
+      </div>
+      <div class="menu-card card-emerald" onclick="goTo('selecionar')">
+        <div class="menu-card-bg"></div>
+        <div class="menu-card-icon">🔍</div>
+        <h2>Execução</h2>
+        <p>Inicie a verificação no terreno utilizando as questões configuradas por departamento.</p>
+        <div class="menu-card-cta">Começar agora <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW: PLANEAMENTO -->
+<div class="view" id="view-planeamento">
+  <div class="container">
+    <div class="page-header">
+      <h2>Planeamento</h2>
+      <p>Agende e gira o cronograma de auditorias</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-dark" onclick="openPlanModal()">+ Agendar Auditoria</button>
+      <button class="btn btn-ghost" onclick="exportCSV('intro')">↓ Exportar CSV</button>
+    </div>
+    <div id="plan-empty" class="empty-state"><div class="ei">📅</div><p>Sem auditorias planeadas. Clica em "+ Agendar Auditoria".</p></div>
+    <div id="plan-cards" style="display:flex;flex-direction:column;gap:.75rem"></div>
+  </div>
+</div>
+
+<!-- MODAL: NOVA AUDITORIA -->
+<div class="modal-overlay" id="plan-modal" onclick="closePlanModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3>Nova Auditoria</h3>
+      <button class="modal-close" onclick="closePlanModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="mform-grid" style="margin-bottom:.75rem">
+        <div class="mfield">
+          <label>ID da Auditoria</label>
+          <input type="text" id="m-id" placeholder="AUD-2025-001"/>
+        </div>
+        <div class="mfield">
+          <label>Data</label>
+          <input type="date" id="m-data"/>
+        </div>
+      </div>
+      <div class="mform-grid full" style="margin-bottom:.75rem">
+        <div class="mfield">
+          <label>Departamento</label>
+          <select id="m-dept">
+            <option value="">Selecionar departamento...</option>
+            <option value="DCO">DCO — Compras</option>
+            <option value="DEN">DEN — Engenharia</option>
+            <option value="DATLOG">DATLOG — Pós-Venda (Logística)</option>
+            <option value="DATTECH">DATTECH — Pós-Venda (Tech Support)</option>
+            <option value="DPR">DPR — Produção</option>
+            <option value="DLO">DLO — Logística</option>
+            <option value="DSQA">DSQA — Sistema Gestão Integrada</option>
+            <option value="DCM">DCM — Comercial</option>
+            <option value="DGN">DGN — Gestão</option>
+            <option value="DGR">DGR — Recursos Humanos</option>
+          </select>
+        </div>
+      </div>
+      <div class="mform-grid" style="margin-bottom:.75rem">
+        <div class="mfield">
+          <label>Auditor Coordenador</label>
+          <input type="text" id="m-coord" placeholder="Nome"/>
+        </div>
+        <div class="mfield">
+          <label>Auditor</label>
+          <input type="text" id="m-aud" placeholder="Nome"/>
+        </div>
+      </div>
+      <div class="mform-grid" style="margin-bottom:.75rem">
+        <div class="mfield">
+          <label>Auditado</label>
+          <input type="text" id="m-auditado" placeholder="Nome / Função"/>
+        </div>
+        <div class="mfield">
+          <label>Registado por</label>
+          <input type="text" id="m-reg" placeholder="Nome"/>
+        </div>
+      </div>
+      <div class="mform-grid" style="margin-bottom:.75rem">
+        <div class="mfield">
+          <label>Hora Prevista</label>
+          <input type="time" id="m-hprev"/>
+        </div>
+        <div class="mfield">
+          <label>Hora Real</label>
+          <input type="time" id="m-hreal"/>
+        </div>
+      </div>
+      <div class="mform-grid full">
+        <div class="mfield">
+          <label>Colaboradores Contactados</label>
+          <input type="text" id="m-colab" placeholder="Separados por vírgula"/>
+        </div>
+      </div>
+      <div class="mform-grid" style="margin-top:.75rem">
+        <div class="mfield">
+          <label>Documentos de Referência</label>
+          <textarea id="m-docs" rows="2" placeholder="Lista de documentos..."></textarea>
+        </div>
+        <div class="mfield">
+          <label>Requisitos</label>
+          <textarea id="m-req" rows="2" placeholder="Requisitos a verificar..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closePlanModal()">Cancelar</button>
+      <button class="btn btn-dark" onclick="savePlanModal()">+ Adicionar ao Planeamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW: SELECIONAR DEPT -->
+<div class="view" id="view-selecionar">
+  <div class="container">
+    <div class="page-header">
+      <h2>Executar Auditoria</h2>
+      <p>Seleciona o departamento para iniciar o registo</p>
+    </div>
+    <div class="dept-grid" id="dept-select-grid"></div>
+    <div id="dept-empty" class="empty-state" style="display:none"><div class="ei">🏢</div><p>Nenhum departamento com questões configuradas.</p></div>
+  </div>
+</div>
+
+<!-- VIEW: AUDITORIA -->
+<div class="view" id="view-auditoria">
+  <div class="container">
+    <div class="audit-header">
+      <div class="audit-header-left">
+        <div class="audit-icon">🔍</div>
+        <div>
+          <div class="audit-label">Auditoria em curso</div>
+          <div class="audit-dept" id="audit-dept-title">—</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <button class="btn btn-ghost no-print" onclick="addExtra()">+ Questão extra</button>
+        <button class="btn btn-emerald no-print" onclick="goTo('relatorio')">📊 Concluir Relatório</button>
+      </div>
+    </div>
+    <div class="q-list" id="q-list"></div>
+    <div id="q-empty" class="empty-state" style="display:none"><div class="ei">🔍</div><p>Seleciona um departamento para carregar questões.</p></div>
+  </div>
+</div>
+
+<!-- VIEW: RELATÓRIO -->
+<div class="view" id="view-relatorio">
+  <div class="container">
+    <div class="toolbar no-print" style="margin-bottom:1.5rem">
+      <button class="btn btn-ghost" onclick="goTo('auditoria')">← Voltar à Auditoria</button>
+      <select id="rel-dept" onchange="buildReport()" style="background:var(--white);border:1px solid var(--slate200);border-radius:12px;padding:.55rem 1rem;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;color:var(--slate700);outline:none;cursor:pointer">
+        <option value="">Todos os departamentos</option>
+      </select>
+      <button class="btn btn-blue" onclick="window.print()">↓ Exportar PDF</button>
+      <button class="btn btn-ghost" onclick="exportCSV('auditoria')">↓ Exportar CSV</button>
+    </div>
+    <div id="rel-content"></div>
+  </div>
+</div>
+
+<!-- VIEW: QUESTÕES -->
+<div class="view" id="view-questoes">
+  <div class="container">
+    <div class="page-header">
+      <h2>Base de Questões</h2>
+      <p>As questões aqui configuradas são carregadas automaticamente por departamento na Execução</p>
+    </div>
+    <div class="toolbar">
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <input type="text" id="new-dept-input" placeholder="Novo departamento..." style="background:var(--white);border:1px solid var(--slate200);border-radius:12px;padding:.55rem 1rem;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--slate800);outline:none;width:200px">
+        <button class="btn btn-dark" onclick="addDept()">+ Departamento</button>
+      </div>
+      <button class="btn btn-blue" onclick="addQuestion()" style="margin-left:auto">+ Adicionar Questão</button>
+    </div>
+    <div class="filter-tabs" id="q-filter-tabs"></div>
+    <div id="cfg-root"></div>
+  </div>
+</div>
+
+<script>
+const BASE={
+'DCO':[
+{id:'A1DCO1',inv:'A documentação em vigor encontra-se atualizada? Podemos ver que documentos estão em vigor?',foco:'7.5 Info. Documentada'},
+{id:'A1DCO2',inv:'Existem registos das atividades definidas no Procedimento das Compras? (Formulários, Pedidos de consulta, Pedido de Cotação, Adjudicações, Contratos, …)',foco:'8.4 Compras'},
+{id:'A1DCO3',inv:'Existe uma lista de fornecedores? Está atualizada com o estado (ativo/não ativo)?',foco:'8.4.1 Seleção'},
+{id:'A1DCO4',inv:'Onde é possível encontrar o documento de avaliação de fornecedores? Qual a última avaliação feita ao fornecedor XPTO?',foco:'8.4.1 Avaliação'},
+{id:'A1DCO5',inv:'Foi realizada a avaliação dos fornecedores 1-Tier da empresa?',foco:'8.4.1 Desempenho'},
+{id:'A1DCO6',inv:'Existem registos de retorno de informação a fornecedores (feedback avaliação)?',foco:'8.2.1 Comunicação'},
+{id:'A1DCO7',inv:'Podemos ver um pedido de compra? Os pedidos estão preenchidos e armazenados de acordo com os parâmetros pré-definidos?',foco:'8.4.3 Info. Compras'},
+{id:'A1DCO8',inv:'Todos os indicadores do processo possuem dados para análise? Qual a frequência de atualização?',foco:'9.1.3 Análise'},
+{id:'A1DCO9',inv:'O mapeamento do processo/fluxograma existe e encontra-se atualizado?',foco:'4.4 Processos'},
+{id:'A1DCO10',inv:'Existe um planeamento de Manutenção de equipamentos? Qual é a próxima manutenção?',foco:'7.1.3 Infraestrutura'},
+{id:'A1DCO11',inv:'Qual o fluxo de processo quando ocorre a aquisição de um novo equipamento?',foco:'8.4 / 7.1.3'},
+{id:'A1DCO12',inv:'Qual o procedimento para a atribuição de códigos?',foco:'7.5.2 Identificação'},
+{id:'A1DCO13',inv:'[NEW] Os critérios de seleção de fornecedores incluem parâmetros de ética, sustentabilidade ou impacto ambiental (ESG)?',foco:'ESG (G/E)'},
+{id:'A1DCO14',inv:'[NEW] Como é avaliado o risco de cibersegurança em fornecedores que detêm dados sensíveis?',foco:'Cibersegurança'},
+],
+'DLO':[
+{id:'A2DLO1',inv:'O mapeamento do processo/fluxograma existe e encontra-se atualizado?',foco:'4.4 Processos'},
+{id:'A2DLO2',inv:'As entradas e saídas dos processos encontram-se identificadas?',foco:'4.4.1 b)'},
+{id:'A2DLO3',inv:'As ações estão definidas de acordo com a metodologia PDCA (Ação/Responsável/Data)?',foco:'6.1 Riscos'},
+{id:'A2DLO4',inv:'Podemos ver os indicadores dos vários processos? Para objetivos não cumpridos, foram implementadas ações corretivas?',foco:'9.1.3 / 10.2'},
+{id:'A2DLO5',inv:'Os documentos disponíveis encontram-se codificados?',foco:'7.5.2'},
+{id:'A2DLO6',inv:'O registo de entrada e saída de matéria-prima é realizado?',foco:'8.5.1 Controlo'},
+{id:'A2DLO7',inv:'Os métodos de suporte à produção estão definidos? (carrinhos de picking)',foco:'8.5.1'},
+{id:'A2DLO8',inv:'O local está devidamente higienizado para o manuseamento dos produtos?',foco:'7.1.4 Ambiente'},
+{id:'A2DLO9',inv:'Os EPIs foram disponibilizados aos colaboradores? Existe um registo?',foco:'7.1.4 / Social'},
+{id:'A2DLO10',inv:'Há checklists específicos para o registo de não conformidades de cada produto?',foco:'8.7 Saídas NOK'},
+{id:'A2DLO11',inv:'Os equipamentos estão com a manutenção em dia? Existe um plano?',foco:'7.1.3'},
+{id:'A2DLO12',inv:'O armazenamento para envio evita danos nas mercadorias? O material está identificado?',foco:'8.5.4 Preservação'},
+{id:'A2DLO13',inv:'Os produtos que exigem manuseamento específico têm orientações visíveis nas embalagens?',foco:'8.5.4'},
+{id:'A2DLO14',inv:'Os materiais em curso encontram-se identificados?',foco:'8.5.2'},
+{id:'A2DLO15',inv:'Os materiais armazenados têm identificação?',foco:'8.5.2'},
+{id:'A2DLO16',inv:'O documento "check list" de armazém (mod_dlo_02_01) encontra-se atualizado?',foco:'7.5.3'},
+{id:'A2DLO17',inv:'Carrinhos de Picking estão identificados corretamente?',foco:'8.5.2'},
+{id:'A2DLO18',inv:'[NEW] Existe um plano de gestão de resíduos de embalagens (redução de plástico/cartão)?',foco:'ESG (Ambiental)'},
+],
+'DATLOG':[
+{id:'A3DATLOG1',inv:'A documentação em vigor encontra-se atualizada?',foco:'7.5.3'},
+{id:'A3DATLOG2',inv:'Existem registos das atividades definidas no Procedimento das Compras?',foco:'8.4'},
+{id:'A3DATLOG3',inv:'Existe uma lista de fornecedores atualizada (ativo/não ativo)?',foco:'8.4.1'},
+{id:'A3DATLOG4',inv:'Onde está o documento de avaliação de fornecedores? Qual a última ao fornecedor XPTO?',foco:'8.4.1'},
+{id:'A3DATLOG5',inv:'Foi realizada a avaliação dos fornecedores 1-Tier?',foco:'8.4.1'},
+{id:'A3DATLOG6',inv:'Existem registos de retorno de informação a fornecedores?',foco:'8.2.1'},
+{id:'A3DATLOG7',inv:'Os pedidos de assistência estão preenchidos e armazenados segundo os parâmetros?',foco:'8.5.1'},
+{id:'A3DATLOG8',inv:'Todos os indicadores possuem dados? Podemos ver o mês anterior?',foco:'9.1.3'},
+{id:'A3DATLOG9',inv:'O mapeamento do processo existe e está atualizado?',foco:'4.4'},
+{id:'A3DATLOG10',inv:'Existe planeamento de Assistência? Qual o procedimento e instrução de trabalho?',foco:'8.5.1'},
+{id:'A3DATLOG11',inv:'[NEW] O planeamento de rotas logísticas considera a eficiência carbónica?',foco:'Clima (ISO 2024)'},
+],
+'DATTECH':[
+{id:'A3DATTECH1',inv:'O mapeamento do processo/fluxograma existe e encontra-se atualizado?',foco:'4.4'},
+{id:'A3DATTECH2',inv:'A documentação de apoio técnico e Live Demos está atualizada?',foco:'7.5.3'},
+{id:'A3DATTECH3',inv:'Existem registos (fichas, relatórios técnicos)? Onde são armazenados?',foco:'8.5.1'},
+{id:'A3DATTECH4',inv:'Que critérios são avaliados? Existe avaliação para a demonstração feita ao cliente?',foco:'9.1.2 Satisfação'},
+{id:'A3DATTECH5',inv:'Podemos consultar um técnico alocado a uma Live Demo recente?',foco:'7.1.2 Pessoas'},
+{id:'A3DATTECH6',inv:'Há evidência de avaliação da eficácia da Live Demo pelo cliente ou comercial?',foco:'9.1.2'},
+{id:'A3DATTECH7',inv:'O feedback de clientes sobre o apoio prestado é documentado e analisado?',foco:'8.2.1'},
+{id:'A3DATTECH8',inv:'Registos de intervenção seguem critérios definidos? Há validação de campos críticos?',foco:'8.5.1'},
+{id:'A3DATTECH9',inv:'Que indicadores existem (taxa sucesso, feedback)? Qual a frequência de análise?',foco:'9.1.3'},
+{id:'A3DATTECH10',inv:'Existe planeamento das Live Demos? Quem gere e qual a Instrução de Trabalho?',foco:'8.5.1'},
+{id:'A3DATTECH11',inv:'Existe registo sistemático de pedidos via Canais Informais (WhatsApp/Telemóvel)?',foco:'8.2.1 / 7.5.3'},
+{id:'A3DATTECH12',inv:'Os tempos de resposta ao cliente estão definidos e monitorizados?',foco:'8.2.1'},
+{id:'A3DATTECH13',inv:'Existe discrepância entre pedidos informais e registos no PHC? Como é tratada?',foco:'10.2 NC'},
+{id:'A3DATTECH14',inv:'A equipa é instruída a formalizar contactos informais? Existe procedimento?',foco:'7.2 Competência'},
+{id:'A3DATTECH15',inv:'Que garantia existe de que os registos no PHC são completos?',foco:'8.5.1'},
+{id:'A3DATTECH16',inv:'Há revisão periódica da eficácia dos canais de suporte (WhatsApp vs Oficial)?',foco:'9.1.3'},
+{id:'A3DATTECH17',inv:'Os clientes estão informados sobre canais oficiais e tempos de resposta?',foco:'8.2.1'},
+{id:'A3DATTECH18',inv:'Existe um fluxo claro de escalamento se o técnico não responder?',foco:'5.3 Funções'},
+{id:'A3DATTECH19',inv:'Os indicadores de suporte incluem todos os meios utilizados?',foco:'9.1.3'},
+{id:'A3DATTECH20',inv:'Que ações estão a ser implementadas para reduzir a discrepância de registo?',foco:'10.3 Melhoria'},
+{id:'A3DATTECH21',inv:'Existe planeamento formal da escala de piquete?',foco:'8.5.1'},
+{id:'A3DATTECH22',inv:'Existem registos sistemáticos do suporte fora de horas?',foco:'8.5.1'},
+{id:'A3DATTECH23',inv:'Técnicos de piquete conhecem o procedimento de registo?',foco:'7.2'},
+{id:'A3DATTECH24',inv:'Há verificação de que o suporte fora de horas é passado para o PHC?',foco:'8.5.1'},
+{id:'A3DATTECH25',inv:'Os dados de piquete são integrados nos indicadores de desempenho?',foco:'9.1.3'},
+{id:'A3DATTECH26',inv:'[NEW] Os acessos remotos para suporte técnico utilizam canais seguros e encriptados?',foco:'Cibersegurança'},
+],
+'DGN':[
+{id:'A4DGN1',inv:'O mapeamento do processo/fluxograma existe e encontra-se atualizado?',foco:'4.4'},
+{id:'A4DGN2',inv:'As entradas e saídas dos processos encontram-se identificadas?',foco:'4.4.1'},
+{id:'A4DGN3',inv:'Os objetivos do SGQ estão estabelecidos e seguem o PDCA?',foco:'6.2 Objetivos'},
+{id:'A4DGN4',inv:'Podemos ver os indicadores? Foram implementadas ações para metas não atingidas?',foco:'9.1.3'},
+{id:'A4DGN5',inv:'Podemos ver o PDCA para as ações definidas?',foco:'10.3 Melhoria'},
+{id:'A4DGN6',inv:'A leitura dos objetivos demonstra compromisso com a melhoria contínua?',foco:'5.1 Liderança'},
+{id:'A4DGN7',inv:'Existe Ata de Revisão do SGQ? Qual a periodicidade?',foco:'9.3 Revisão'},
+{id:'A4DGN8',inv:'[NEW] A análise de riscos e contexto (4.1) considera o impacto das Alterações Climáticas?',foco:'Clima (ISO 2024)'},
+{id:'A4DGN9',inv:'[NEW] Existe uma política de ética e anticorrupção comunicada aos parceiros?',foco:'ESG (Governança)'},
+],
+'DGR':[
+{id:'A5DGR1',inv:'O organigrama funcional está preenchido e atualizado?',foco:'5.3'},
+{id:'A5DGR2',inv:'Descrições de funções estão definidas e atualizadas?',foco:'5.3'},
+{id:'A5DGR3',inv:'Foi realizada a matriz de competência? Qual a frequência de revisão?',foco:'7.2'},
+{id:'A5DGR4',inv:'O PDI e plano de formação estão atualizados com as necessidades levantadas?',foco:'7.2'},
+{id:'A5DGR5',inv:'Para formações com +3 meses, a análise de eficácia foi realizada?',foco:'7.2'},
+{id:'A5DGR6',inv:'Registos de escolaridade e cursos estão acessíveis? Quem tem acesso?',foco:'7.5.3'},
+{id:'A5DGR7',inv:'Realizou pesquisa de satisfação interna (clima)? Foi dado feedback?',foco:'ESG (Social)'},
+{id:'A5DGR8',inv:'Existe procedimento de feedback da avaliação anual?',foco:'7.3 Consciencialização'},
+{id:'A5DGR9',inv:'O mapeamento do processo existe e está atualizado?',foco:'4.4'},
+{id:'A5DGR10',inv:'[NEW] Existe evidência de formação em Cibersegurança e Proteção de Dados?',foco:'Cibersegurança'},
+],
+'DCM':[
+{id:'A6DCM1',inv:'O mapeamento do processo comercial existe e encontra-se atualizado?',foco:'4.4'},
+{id:'A6DCM2',inv:'[NEW] As propostas e contratos incluem cláusulas de privacidade de dados (RGPD)?',foco:'Governança / Social'},
+],
+'DPR':[
+{id:'A7DPR1',inv:'O mapeamento do processo/fluxograma existe e encontra-se atualizado?',foco:'4.4'},
+{id:'A7DPR2',inv:'As entradas e saídas dos processos encontram-se identificadas?',foco:'4.4.1'},
+{id:'A7DPR3',inv:'As ações estão definidas em PDCA?',foco:'6.1'},
+{id:'A7DPR4',inv:'Podemos ver os indicadores? Foram implementadas ações corretivas?',foco:'9.1.3'},
+{id:'A7DPR5',inv:'A leitura dos objetivos demonstra compromisso com a melhoria contínua?',foco:'10.3'},
+{id:'A7DPR6',inv:'Os métodos para suporte à produção estão definidos?',foco:'8.5.1'},
+{id:'A7DPR7',inv:'Os equipamentos estão com a manutenção em dia?',foco:'7.1.3'},
+{id:'A7DPR8',inv:'Bancadas e ferramentas estão organizadas para evitar riscos operacionais?',foco:'7.1.4'},
+{id:'A7DPR9',inv:'O padrão da matéria-prima é detalhado e conhecido por todos?',foco:'8.5.1'},
+{id:'A7DPR10',inv:'Há checklists específicas para garantia de produto conforme?',foco:'8.6 Libertação'},
+{id:'A7DPR11',inv:'Colaboradores conhecem o padrão aceitável do produto final?',foco:'7.3'},
+{id:'A7DPR12',inv:'As inspeções apresentam dados de referência para apoiar os colaboradores?',foco:'8.5.1'},
+{id:'A7DPR13',inv:'O planeamento produtivo encontra-se disponível?',foco:'8.1 Planeamento'},
+{id:'A7DPR14',inv:'Qual o processo para registo de produto NOK?',foco:'8.7'},
+{id:'A7DPR15',inv:'Os colaboradores conhecem os procedimentos de montagem?',foco:'7.2'},
+{id:'A7DPR16',inv:'[NEW] Como é monitorizado o consumo energético ou de água nos postos de trabalho?',foco:'ESG (Ambiental)'},
+],
+'DSQA':[
+{id:'A8DSQA1',inv:'Existe um formato PDCA que demonstre a melhoria do Sistema de Gestão?',foco:'10.3'},
+{id:'A8DSQA2',inv:'Existe um controlo de documentação do Sistema de Gestão? Onde?',foco:'7.5.3'},
+{id:'A8DSQA3',inv:'Os objetivos do SGQA estão estabelecidos e em PDCA?',foco:'6.2'},
+{id:'A8DSQA4',inv:'Para os objetivos não cumpridos, foram implementadas ações corretivas?',foco:'10.2'},
+{id:'A8DSQA5',inv:'A leitura dos objetivos demonstra evolução nas metas?',foco:'10.3'},
+{id:'A8DSQA6',inv:'[NEW] Existe um Plano de Recuperação de Desastres para os dados do SGQA?',foco:'Cibersegurança'},
+],
+'DEN':[
+{id:'A9DEN1',inv:'O mapeamento do processo/fluxograma existe e encontra-se atualizado?',foco:'4.4'},
+{id:'A9DEN2',inv:'As entradas e saídas dos processos encontram-se identificadas?',foco:'4.4.1'},
+{id:'A9DEN3',inv:'Objetivos do SGQA em PDCA?',foco:'6.2'},
+{id:'A9DEN4',inv:'Para objetivos não cumpridos, houve ações corretivas?',foco:'10.2'},
+{id:'A9DEN5',inv:'Leitura de objetivos demonstra compromisso com melhoria contínua?',foco:'10.3'},
+{id:'A9DEN6',inv:'Existe planeamento de projetos? Análise de riscos? Framework?',foco:'8.3 Design/Desenv.'},
+{id:'A9DEN7',inv:'[NEW] No desenvolvimento de projetos, são considerados critérios de economia circular?',foco:'ESG (Ambiental)'},
+],
+};
+
+let D={
+  depts:Object.keys(BASE),
+  questoes:JSON.parse(JSON.stringify(BASE)),
+  introRows:[],
+  audRows:[],
+  activeDept:null,
+  cfgFilter:'Todos'
+};
+
+/* ── NAVIGATION ── */
+function goHome(){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-menu').classList.add('active');
+  document.getElementById('back-btn').style.display='none';
+}
+function goTo(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.getElementById('back-btn').style.display='flex';
+  if(name==='selecionar') renderDeptSelectGrid();
+  if(name==='relatorio'){buildRelatorioSelects();buildReport();}
+  if(name==='questoes') renderQuestoes();
+  if(name==='planeamento') renderPlan();
+}
+
+/* ── MODAL PLANEAMENTO ── */
+const DEPT_NAMES={
+  DCO:'Compras',DEN:'Engenharia',DATLOG:'Pós-Venda (Logística)',
+  DATTECH:'Pós-Venda (Tech Support)',DPR:'Produção',DLO:'Logística',
+  DSQA:'Sistema Gestão Integrada',DCM:'Comercial',DGN:'Gestão',DGR:'Recursos Humanos'
+};
+function openPlanModal(){
+  document.getElementById('m-id').value=`AUD-${new Date().getFullYear()}-${String(D.introRows.length+1).padStart(3,'0')}`;
+  document.getElementById('m-data').value=new Date().toISOString().slice(0,10);
+  document.getElementById('m-dept').value='';
+  ['m-coord','m-aud','m-auditado','m-reg','m-colab','m-docs','m-req','m-hprev','m-hreal'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('plan-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('m-dept').focus(),300);
+}
+function closePlanModal(e){
+  if(e&&e.target!==document.getElementById('plan-modal'))return;
+  document.getElementById('plan-modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function savePlanModal(){
+  const dept=document.getElementById('m-dept').value;
+  const id=document.getElementById('m-id').value.trim();
+  if(!dept){document.getElementById('m-dept').focus();document.getElementById('m-dept').style.borderColor='var(--rose)';setTimeout(()=>document.getElementById('m-dept').style.borderColor='',1500);return;}
+  if(!id){document.getElementById('m-id').focus();return;}
+  D.introRows.push({
+    id,dept,
+    coord:document.getElementById('m-coord').value,
+    aud:document.getElementById('m-aud').value,
+    auditado:document.getElementById('m-auditado').value,
+    data:document.getElementById('m-data').value,
+    hprev:document.getElementById('m-hprev').value,
+    hreal:document.getElementById('m-hreal').value,
+    reg:document.getElementById('m-reg').value,
+    colab:document.getElementById('m-colab').value,
+    docs:document.getElementById('m-docs').value,
+    req:document.getElementById('m-req').value,
+  });
+  closePlanModal();
+  renderPlan();
+}
+
+/* ── PLANEAMENTO ── */
+function renderPlan(){
+  const cards=document.getElementById('plan-cards');
+  const empty=document.getElementById('plan-empty');
+  cards.innerHTML='';
+  empty.style.display=D.introRows.length?'none':'block';
+  cards.style.display=D.introRows.length?'flex':'none';
+  D.introRows.forEach((r,i)=>{
+    const deptName=DEPT_NAMES[r.dept]||r.dept;
+    const div=document.createElement('div');
+    div.className='card';
+    div.style.cssText='padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap';
+    div.innerHTML=`
+      <div style="display:flex;align-items:center;gap:.6rem;flex:0 0 auto">
+        <span style="font-size:10px;font-weight:700;font-family:'DM Mono',monospace;color:var(--blue);background:var(--blue-light);padding:3px 8px;border-radius:6px">${r.id}</span>
+      </div>
+      <div style="flex:1;min-width:160px">
+        <div style="font-size:15px;font-weight:800;color:var(--slate900);letter-spacing:-.01em">${deptName}</div>
+        <div style="font-size:10px;font-weight:700;color:var(--slate400);font-family:'DM Mono',monospace;margin-top:1px">${r.dept}</div>
+      </div>
+      ${r.aud?`<div style="display:flex;align-items:center;gap:.4rem;flex:0 0 auto"><span style="font-size:11px;color:var(--slate400)">👤</span><span style="font-size:13px;font-weight:600;color:var(--slate600)">${r.aud}</span></div>`:''}
+      ${r.data?`<div style="background:var(--slate100);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace;color:var(--slate600);flex:0 0 auto">${r.data}</div>`:''}
+      ${r.hprev?`<div style="font-size:11px;font-weight:600;color:var(--slate400);flex:0 0 auto">🕐 ${r.hprev}</div>`:''}
+      <button class="btn btn-sm btn-danger-ghost" style="flex:0 0 auto;margin-left:auto" onclick="D.introRows.splice(${i},1);renderPlan()">Remover</button>`;
+    cards.appendChild(div);
+  });
+}
+
+/* ── SELECIONAR DEPT ── */
+function renderDeptSelectGrid(){
+  const grid=document.getElementById('dept-select-grid');
+  const empty=document.getElementById('dept-empty');
+  grid.innerHTML='';
+  const depts=D.depts.filter(d=>(D.questoes[d]||[]).length>0);
+  empty.style.display=depts.length?'none':'block';
+  depts.forEach(dept=>{
+    const div=document.createElement('div');
+    div.className='dept-card'+(D.activeDept===dept?' selected':'');
+    div.innerHTML=`<div class="dept-card-dot"></div>
+      <div class="dept-card-label">Departamento</div>
+      <div class="dept-card-name">${dept}</div>
+      <div class="dept-card-count">${(D.questoes[dept]||[]).length} questões</div>
+      <div class="dept-card-arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>`;
+    div.onclick=()=>startAudit(dept);
+    grid.appendChild(div);
+  });
+}
+
+/* ── AUDITORIA ── */
+function startAudit(dept){
+  D.activeDept=dept;
+  D.audRows=D.audRows.filter(r=>r.dept!==dept);
+  document.getElementById('audit-dept-title').textContent=dept;
+  const list=document.getElementById('q-list');
+  list.innerHTML='';
+  (D.questoes[dept]||[]).forEach((q,i)=>{
+    const rid=`q-${dept}-${i}`;
+    list.appendChild(makeQCard(rid,dept,q.id,q.inv,q.foco,'','','',false));
+  });
+  document.getElementById('q-empty').style.display=(D.questoes[dept]||[]).length?'none':'block';
+  goTo('auditoria');
+}
+
+function makeQCard(rid,dept,qid,inv,foco,ev,om,nc,isExtra){
+  const div=document.createElement('div');
+  div.id='qc-'+rid;
+  const isNew=inv.startsWith('[NEW]');
+  const clean=inv.replace('[NEW]','').trim();
+  const sc=nc==='NC'?'state-nc':om==='OM'?'state-om':(nc==='OK'||om==='OK')?'state-ok':'';
+  div.className='q-card '+sc;
+  div.innerHTML=`
+    <div class="q-header">
+      <span class="q-num">${qid||'?'}</span>
+      <span class="q-text">${clean}${isNew?'<span class="q-new">NEW</span>':''}</span>
+      <button class="q-del" onclick="delQCard('${rid}')" title="Remover">✕</button>
+    </div>
+    <div><span class="q-foco">📌 ${foco}</span></div>
+    <div class="q-body">
+      <div class="q-ev">
+        <div class="ev-label">Constatação / Evidência</div>
+        <textarea class="ev-textarea" placeholder="Descreva o que foi observado…" onchange="saveQCard('${rid}')">${ev}</textarea>
+      </div>
+      <div class="q-btns">
+        <div class="q-btns-label">OM</div>
+        <div class="q-btns-row">
+          <button class="tog${om==='OM'?' t-om':''}" onclick="togQ(this,'OM','${rid}')">OM</button>
+          <button class="tog${om==='OK'?' t-ok':''}" onclick="togQ(this,'OK','${rid}')">OK</button>
+        </div>
+        <div class="q-btns-label" style="margin-top:.5rem">NC</div>
+        <div class="q-btns-row">
+          <button class="tog${nc==='NC'?' t-nc':''}" onclick="togQ(this,'NC','${rid}')">NC</button>
+          <button class="tog${nc==='OK'?' t-ok':''}" onclick="togQ(this,'OK','${rid}')">OK</button>
+        </div>
+      </div>
+    </div>`;
+  return div;
+}
+
+function togQ(btn,val,rid){
+  const pair=btn.closest('.q-btns-row');
+  const wasOn=btn.classList.contains('t-om')||btn.classList.contains('t-nc')||btn.classList.contains('t-ok');
+  pair.querySelectorAll('.tog').forEach(b=>b.classList.remove('t-om','t-nc','t-ok'));
+  if(!wasOn) btn.classList.add(val==='OM'?'t-om':val==='NC'?'t-nc':'t-ok');
+  saveQCard(rid);
+  updateQCardState(rid);
+}
+
+function updateQCardState(rid){
+  const card=document.getElementById('qc-'+rid);if(!card)return;
+  const rows=card.querySelectorAll('.q-btns-row');
+  const omOn=rows[0]?.querySelector('.t-om');
+  const ncOn=rows[1]?.querySelector('.t-nc');
+  const okAny=card.querySelector('.t-ok');
+  card.className='q-card';
+  if(ncOn) card.classList.add('state-nc');
+  else if(omOn) card.classList.add('state-om');
+  else if(okAny) card.classList.add('state-ok');
+}
+
+function saveQCard(rid){
+  const card=document.getElementById('qc-'+rid);if(!card)return;
+  const dept=D.activeDept||'';
+  const qid=card.querySelector('.q-num')?.textContent||'';
+  const inv=card.querySelector('.q-text')?.textContent?.replace('NEW','').trim()||'';
+  const foco=card.querySelector('.q-foco')?.textContent?.replace('📌 ','').trim()||'';
+  const ev=card.querySelector('textarea')?.value||'';
+  const rows=card.querySelectorAll('.q-btns-row');
+  const omVal=rows[0]?.querySelector('.t-om,.t-ok')?.textContent||'';
+  const ncVal=rows[1]?.querySelector('.t-nc,.t-ok')?.textContent||'';
+  const audId='';
+  const idx=D.audRows.findIndex(r=>r.rid===rid);
+  const obj={rid,audId,dept,qid,inv,foco,ev,om:omVal,nc:ncVal};
+  if(idx>=0)D.audRows[idx]=obj;else D.audRows.push(obj);
+}
+
+function addExtra(){
+  if(!D.activeDept){alert('Seleciona primeiro um departamento');return;}
+  const rid='ex-'+Date.now();
+  document.getElementById('q-list').appendChild(makeQCard(rid,D.activeDept,'','','','','','',true));
+}
+function delQCard(rid){
+  document.getElementById('qc-'+rid)?.remove();
+  D.audRows=D.audRows.filter(r=>r.rid!==rid);
+}
+
+/* ── RELATÓRIO ── */
+function buildRelatorioSelects(){
+  const sel=document.getElementById('rel-dept');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Todos os departamentos</option>';
+  D.depts.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);});
+  if(cur)sel.value=cur;
+}
+function buildReport(){
+  const dept=document.getElementById('rel-dept').value;
+  const rows=dept?D.audRows.filter(r=>r.dept===dept):D.audRows;
+  const el=document.getElementById('rel-content');
+  if(!rows.length){el.innerHTML='<div class="empty-state"><div class="ei">📊</div><p>Sem registos ainda. Preenche o Registo de Auditoria primeiro.</p></div>';return;}
+  const ncs=rows.filter(r=>r.nc==='NC');
+  const oms=rows.filter(r=>r.om==='OM');
+  const oks=rows.filter(r=>r.nc==='OK'||r.om==='OK');
+  const pend=rows.filter(r=>!r.nc&&!r.om);
+  const deptLabel=dept||'Todos os Departamentos';
+  let h=`
+  <div class="report-wrap">
+    <div class="report-head">
+      <div>
+        <div class="report-title">Relatório</div>
+        <div class="report-meta">📋 AuditHub · ${new Date().toLocaleDateString('pt-PT')}</div>
+      </div>
+      <div>
+        <div class="report-dept-badge">${deptLabel}</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card s-total"><span class="stat-num">${rows.length}</span><div class="stat-lbl">Questões</div></div>
+      <div class="stat-card s-ok"><span class="stat-num">${oks.length}</span><div class="stat-lbl">Conformes</div></div>
+      <div class="stat-card s-om"><span class="stat-num">${oms.length}</span><div class="stat-lbl">Oport. Melhoria</div></div>
+      <div class="stat-card s-nc"><span class="stat-num">${ncs.length}</span><div class="stat-lbl">Não Conformidades</div></div>
+      <div class="stat-card s-pend"><span class="stat-num">${pend.length}</span><div class="stat-lbl">Por avaliar</div></div>
+    </div>`;
+  if(ncs.length){
+    h+=`<h3 style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--rose);margin-bottom:.75rem;padding-left:1rem;border-left:4px solid var(--rose)">Não Conformidades (${ncs.length})</h3>`;
+    ncs.forEach(r=>{h+=`<div style="background:var(--rose-light);border:1px solid rgba(225,29,72,.2);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:.5rem">
+      <div style="font-size:13px;font-weight:800;color:var(--rose);margin-bottom:.4rem">${r.inv}</div>
+      <div style="font-size:10px;font-weight:700;color:var(--slate400);font-family:'DM Mono',monospace;margin-bottom:.4rem">${r.qid||'—'} · ${r.dept} · ${r.foco}</div>
+      <div style="font-size:12px;color:var(--slate500);font-style:italic">${r.ev||'Sem evidência registada'}</div></div>`;});
+  }
+  if(oms.length){
+    h+=`<h3 style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--amber);margin-bottom:.75rem;margin-top:1.5rem;padding-left:1rem;border-left:4px solid var(--amber)">Oportunidades de Melhoria (${oms.length})</h3>`;
+    oms.forEach(r=>{h+=`<div style="background:var(--amber-light);border:1px solid rgba(217,119,6,.2);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:.5rem">
+      <div style="font-size:13px;font-weight:800;color:var(--amber);margin-bottom:.4rem">${r.inv}</div>
+      <div style="font-size:10px;font-weight:700;color:var(--slate400);font-family:'DM Mono',monospace;margin-bottom:.4rem">${r.qid||'—'} · ${r.dept} · ${r.foco}</div>
+      <div style="font-size:12px;color:var(--slate500);font-style:italic">${r.ev||'Sem evidência registada'}</div></div>`;});
+  }
+  h+=`<div style="height:1px;background:var(--slate100);margin:1.5rem 0"></div>
+  <h3 style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--slate400);margin-bottom:1rem">Detalhe Completo</h3>
+  <div style="display:flex;flex-direction:column;gap:.5rem">`;
+  rows.forEach(r=>{
+    const badgeClass=r.nc==='NC'?'rb-nc':r.om==='OM'?'rb-om':r.nc==='OK'||r.om==='OK'?'rb-ok':'rb-pend';
+    const badgeLabel=r.nc==='NC'?'Não Conforme':r.om==='OM'?'Oport. Melhoria':r.nc==='OK'||r.om==='OK'?'Conforme':'Por avaliar';
+    h+=`<div class="report-item">
+      <div class="report-item-header">
+        <div class="report-item-q"><span style="color:var(--slate300);margin-right:.4rem">${r.qid||'—'}</span>${r.inv}</div>
+        <span class="report-badge ${badgeClass}">${badgeLabel}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+        <span class="chip chip-slate">${r.dept}</span>
+        <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--slate400)">${r.foco}</span>
+      </div>
+      <div class="report-ev">${r.ev||'Nenhuma evidência registada.'}</div>
+    </div>`;
+  });
+  h+=`</div>
+  <div class="sign-grid">
+    <div><div class="sign-line" style="height:4rem"></div><div class="sign-label">Assinatura do Auditor</div><div class="sign-sub">Entidade Certificadora / Interno</div></div>
+    <div><div class="sign-line" style="height:4rem"></div><div class="sign-label">Responsável de Unidade</div><div class="sign-sub">Departamento: ${deptLabel}</div></div>
+  </div>
+  </div>`;
+  el.innerHTML=h;
+}
+
+/* ── BASE DE QUESTÕES ── */
+function renderQuestoes(){
+  renderQFilterTabs();
+  renderCfg();
+}
+function renderQFilterTabs(){
+  const wrap=document.getElementById('q-filter-tabs');
+  wrap.innerHTML='';
+  const tabs=['Todos',...D.depts];
+  tabs.forEach(t=>{
+    const btn=document.createElement('button');
+    btn.className='ftab'+(D.cfgFilter===t?' active':'');
+    btn.textContent=t;
+    btn.onclick=()=>{D.cfgFilter=t;renderQuestoes();};
+    wrap.appendChild(btn);
+  });
+}
+function renderCfg(){
+  const el=document.getElementById('cfg-root');el.innerHTML='';
+  const depts=D.cfgFilter==='Todos'?D.depts:[D.cfgFilter];
+  depts.forEach(dept=>{
+    const qs=D.questoes[dept]||[];
+    const block=document.createElement('div');block.className='cfg-block';
+    block.innerHTML=`<div class="cfg-block-header">
+      <span class="dept-chip">${dept}</span>
+      <span style="font-size:11px;color:var(--slate400);font-family:'DM Mono',monospace;margin-right:auto">${qs.length} questões</span>
+      <button class="btn btn-sm btn-ghost" onclick="addCfgQ('${dept}')">+ Questão</button>
+    </div>
+    <div id="cfg-rows-${dept}"></div>`;
+    el.appendChild(block);
+    renderCfgRows(dept);
+  });
+}
+function renderCfgRows(dept){
+  const wrap=document.getElementById('cfg-rows-'+dept);if(!wrap)return;
+  wrap.innerHTML='';
+  const qs=D.questoes[dept]||[];
+  if(!qs.length){wrap.innerHTML='<div style="padding:.75rem 1.5rem;font-size:12px;color:var(--slate300);font-style:italic">Sem questões neste departamento.</div>';return;}
+  qs.forEach((q,i)=>{
+    const isNew=q.inv.startsWith('[NEW]');
+    const row=document.createElement('div');row.className='cfg-q-row';
+    row.innerHTML=`<span class="cfg-id">${q.id||'—'}</span>
+      <span style="font-size:12px;font-weight:500;color:var(--slate700)">${q.inv.replace('[NEW]','').trim()}${isNew?'<span class="q-new" style="margin-left:5px">NEW</span>':''}</span>
+      <span class="cfg-foco">${q.foco}</span>
+      <button class="btn btn-sm btn-danger-ghost" onclick="delCfgQ('${dept}',${i})">✕</button>`;
+    wrap.appendChild(row);
+  });
+}
+function addCfgQ(dept){
+  const inv=prompt('Questão de Auditoria:');if(!inv?.trim())return;
+  const foco=prompt('Foco / Requisito (ex: 7.5.3):','')||'';
+  D.questoes[dept].push({id:`${dept}-Q${D.questoes[dept].length+1}`,inv:inv.trim(),foco});
+  renderCfgRows(dept);
+}
+function delCfgQ(dept,i){D.questoes[dept].splice(i,1);renderCfgRows(dept);}
+function addDept(){
+  const d=document.getElementById('new-dept-input').value.trim();
+  if(!d)return;if(D.depts.includes(d)){alert('Já existe');return;}
+  D.depts.push(d);D.questoes[d]=[];
+  document.getElementById('new-dept-input').value='';
+  renderQuestoes();
+}
+function addQuestion(){
+  const dept=D.cfgFilter==='Todos'?D.depts[0]:D.cfgFilter;
+  if(!dept)return;
+  addCfgQ(dept);
+}
+
+/* ── EXPORT ── */
+function exportCSV(type){
+  let headers=[],rows=[];
+  if(type==='intro'){
+    headers=['ID','DEPARTAMENTO','AUDITOR Coordenador','AUDITOR','AUDITADO','REGISTADO POR:','HORA PREVISTA','HORA DA AUDITORIA','DATA DE AUDITORIA'];
+    rows=D.introRows.map(r=>[r.id,r.dept,r.coord,r.aud,r.auditado,r.reg,r.hprev,r.hreal,r.data]);
+  }else{
+    headers=['ID','DEPARTAMENTO','Investigação (Questão de Auditoria)','Foco / Requisito','CONSTATAÇÃO / EVIDÊNCIA','OM','NC'];
+    const dept=document.getElementById('rel-dept')?.value||'';
+    const rs=dept?D.audRows.filter(r=>r.dept===dept):D.audRows;
+    rows=rs.map(r=>[r.qid,r.dept,r.inv,r.foco,r.ev,r.om,r.nc]);
+  }
+  const csv=[headers,...rows].map(r=>r.map(c=>`"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}));
+  a.download=`audithub_${type}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+</script>
+</body>
+</html>
