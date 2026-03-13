@@ -35,14 +35,72 @@ function doPost(e) {
       adicionarQuestao(spreadsheet, data);
     } else if (operacao === 'apagarIntro') {
       apagarAuditoriaPlanificada(spreadsheet, data);
+    } else if (operacao === 'obterQuestoes') {
+      const questoes = obterQuestoes(spreadsheet);
+      return HtmlService.createHtmlOutput(JSON.stringify(questoes));
     }
     
     // Retornar resposta silenciosa (sem abrir janela)
     return HtmlService.createHtmlOutput('<script>window.close();</script>').setWidth(1).setHeight(1);
     
   } catch (erro) {
+    Logger.log('Erro em doPost: ' + erro);
     return HtmlService.createHtmlOutput('<script>window.close();</script>').setWidth(1).setHeight(1);
   }
+}
+
+function doGet(e) {
+  try {
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const operacao = e.parameter.operacao;
+    
+    Logger.log('=== doGet iniciado ===');
+    Logger.log('Operação:', operacao);
+    
+    if (operacao === 'obterQuestoes') {
+      Logger.log('Iniciando obtenção de questões...');
+      const questoes = obterQuestoes(spreadsheet);
+      Logger.log('Questões obtidas:', JSON.stringify(questoes));
+      
+      const response = ContentService.createTextOutput(JSON.stringify(questoes))
+        .setMimeType(ContentService.MimeType.JSON);
+      
+      // Adicionar headers CORS
+      response.setHeader('Access-Control-Allow-Origin', '*');
+      response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+      response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      response.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      
+      return response;
+    }
+    
+    Logger.log('Operação desconhecida:', operacao);
+    return ContentService.createTextOutput(JSON.stringify({ erro: 'Operação desconhecida: ' + operacao }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*');
+      
+  } catch (erro) {
+    Logger.log('ERRO em doGet:', erro.toString());
+    Logger.log('Stack:', erro.stack);
+    
+    const response = ContentService.createTextOutput(JSON.stringify({ 
+      erro: erro.message,
+      stack: erro.toString()
+    }))
+      .setMimeType(ContentService.MimeType.JSON);
+    
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    return response;
+  }
+}
+
+function doOptions(e) {
+  return ContentService.createTextOutput()
+    .setMimeType(ContentService.MimeType.TEXT)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+    .setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 }
 
 // Adicionar auditoria planeada à folha INTRO
@@ -142,9 +200,9 @@ function adicionarQuestao(spreadsheet, data) {
   try {
     const sheet = spreadsheet.getSheetByName('REGISTOS');
     
-    // Headers esperados
+    // Headers esperados conforme especificado pelo utilizador
     const headers = [
-      'Departamento', 'Investigação (Questão de Auditoria)', 'Foco / Requisito'
+      'ID', 'DEPARTAMENTO', 'Investigação (Questão de Auditoria)', 'Foco / Requisito'
     ];
     
     // Verificar se headers existem
@@ -155,10 +213,14 @@ function adicionarQuestao(spreadsheet, data) {
       }
     }
     
+    // Gerar ID da questão
+    const questionId = 'Q' + (lastRow); // lastRow é o número da última linha
+    
     // Adicionar nova questão
     const novaLinha = sheet.getLastRow() + 1;
     
     const valores = [
+      questionId,
       data.departamento,
       data.investigacao,
       data.foco
@@ -170,6 +232,84 @@ function adicionarQuestao(spreadsheet, data) {
   } catch (erro) {
     Logger.log('Erro em adicionarQuestao: ' + erro);
     throw erro;
+  }
+}
+
+// Obter todas as questões da folha REGISTOS
+function obterQuestoes(spreadsheet) {
+  try {
+    Logger.log('=== Iniciando obterQuestoes ===');
+    
+    let sheet;
+    try {
+      sheet = spreadsheet.getSheetByName('REGISTOS');
+      Logger.log('✅ Sheet REGISTOS encontrado');
+    } catch(e) {
+      Logger.log('❌ Sheet REGISTOS NÃO encontrado. Sheets disponíveis:');
+      const sheets = spreadsheet.getSheets();
+      sheets.forEach((s, i) => Logger.log('  ' + (i+1) + '. ' + s.getName()));
+      return [];
+    }
+    
+    const lastRow = sheet.getLastRow();
+    const lastCol = sheet.getLastColumn();
+    Logger.log('Dimensões do sheet: ' + lastRow + ' linhas x ' + lastCol + ' colunas');
+    
+    // Se sheet estiver vazio, criar headers
+    if (lastRow === 0) {
+      Logger.log('Sheet vazio, criando headers');
+      const headers = ['ID', 'DEPARTAMENTO', 'Investigação (Questão de Auditoria)', 'Foco / Requisito'];
+      for (let i = 0; i < headers.length; i++) {
+        sheet.getRange(1, i + 1).setValue(headers[i]);
+      }
+      Logger.log('Headers criados');
+      return [];
+    }
+    
+    // Ler headers da linha 1
+    const headerRange = sheet.getRange(1, 1, 1, lastCol);
+    const headers = headerRange.getValues()[0];
+    Logger.log('Headers:', JSON.stringify(headers));
+    
+    // Se há apenas header (linha 1)
+    if (lastRow === 1) {
+      Logger.log('Sheet tem apenas headers, sem dados');
+      return [];
+    }
+    
+    // Ler TODOS os dados do sheet (de linha 2 até a última)
+    Logger.log('Lendo todas as linhas de dados...');
+    const dataRange = sheet.getRange(2, 1, lastRow - 1, lastCol);
+    const values = dataRange.getValues();
+    Logger.log('Total de linhas de dados:', values.length);
+    Logger.log('Dados brutos (primeiras 3 linhas):', JSON.stringify(values.slice(0, 3)));
+    
+    const questoes = [];
+    values.forEach((row, rowIndex) => {
+      // Verificar se a linha tem qualquer conteúdo
+      const temDados = row.some(cell => cell !== null && cell !== '');
+      
+      if (temDados) {
+        const questao = {
+          id: String(row[0] || 'Q' + (rowIndex + 2)),
+          departamento: String(row[1] || ''),
+          investigacao: String(row[2] || ''),
+          foco: String(row[3] || '')
+        };
+        
+        Logger.log('Linha ' + (rowIndex + 2) + ':', JSON.stringify(questao));
+        questoes.push(questao);
+      }
+    });
+    
+    Logger.log('✅ Total de questões processadas:', questoes.length);
+    Logger.log('Resultado final:', JSON.stringify(questoes));
+    
+    return questoes;
+  } catch (erro) {
+    Logger.log('❌ ERRO FATAL em obterQuestoes:', erro.toString());
+    Logger.log('Stack:', erro.stack);
+    return [];
   }
 }
 

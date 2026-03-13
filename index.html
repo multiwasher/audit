@@ -85,6 +85,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--slate900)
 .card-slate .menu-card-icon{background:var(--slate100);color:var(--slate700)}
 .card-slate h2{color:var(--slate800)}
 .card-slate .menu-card-cta{color:var(--slate600)}
+.card-purple .menu-card-bg{background:var(--purple-light)}
+.card-purple .menu-card-icon{background:var(--purple-light);color:var(--purple)}
+.card-purple h2{color:#6d28d9}
+.card-purple .menu-card-cta{color:var(--purple)}
 
 /* PAGE HEADER */
 .page-header{margin-bottom:2rem}
@@ -191,6 +195,23 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
 .empty-state .ei{font-size:3rem;margin-bottom:1rem;opacity:.3}
 .empty-state p{font-size:13px;color:var(--slate400);font-weight:600}
 
+/* INVESTIGAÇÕES CARDS */
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;margin-bottom:2rem}
+.inv-card{background:var(--white);border-radius:var(--r-lg);border:1px solid var(--slate100);border-left:4px solid var(--card-color,#7c3aed);transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden;display:flex;flex-direction:column}
+.inv-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.12);border-color:var(--slate200)}
+.inv-header{background:linear-gradient(135deg,#6d28d9 0%,#7c3aed 100%);color:white;padding:1.25rem;font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:.1em}
+.inv-content{padding:1.5rem;flex:1}
+.inv-title{font-weight:700;color:var(--slate800);font-size:14px;line-height:1.6;margin-bottom:1rem;color:var(--slate700)}
+.inv-foco{display:inline-block;background:var(--slate50);border:1px solid var(--slate200);border-radius:6px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);padding:4px 10px;margin-top:.75rem}
+.inv-footer{padding:0 1.5rem 1.5rem;display:flex;gap:.75rem;font-size:10px;color:var(--slate400);text-transform:uppercase;font-weight:700;letter-spacing:.05em}
+
+/* FILTER DEPT */
+.filter-dept{display:flex;flex-wrap:wrap;gap:0.75rem;margin-bottom:2rem;padding:1rem 0;border-bottom:1px solid var(--slate100)}
+.filter-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;border-radius:12px;border:1.5px solid var(--slate200);background:var(--white);font-size:12px;font-weight:700;color:var(--slate600);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.filter-btn[style]{border-color:var(--btn-color,var(--slate200));color:var(--btn-color,var(--slate600))}
+.filter-btn[style]:hover{border-color:var(--btn-color);background:var(--btn-light);color:var(--btn-color)}
+.filter-btn.active{background:var(--btn-color,var(--purple));color:#fff;border-color:var(--btn-color,var(--purple));box-shadow:0 4px 12px rgba(0,0,0,.15)}
+
 @media(max-width:640px){
   .q-body{grid-template-columns:1fr}
   .menu-grid{grid-template-columns:1fr}
@@ -243,19 +264,19 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
         <p>Agende auditorias, designe auditores e defina datas para cada departamento.</p>
         <div class="menu-card-cta">Ver agenda <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
       </div>
-      <div class="menu-card card-slate" onclick="goTo('questoes')">
-        <div class="menu-card-bg"></div>
-        <div class="menu-card-icon">🗂️</div>
-        <h2>Questões</h2>
-        <p>Gerencie o banco de questões por departamento. Defina a base das auditorias.</p>
-        <div class="menu-card-cta">Configurar banco <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
-      </div>
       <div class="menu-card card-emerald" onclick="goTo('selecionar')">
         <div class="menu-card-bg"></div>
         <div class="menu-card-icon">🔍</div>
         <h2>Execução</h2>
         <p>Inicie a verificação no terreno com as questões configuradas.</p>
         <div class="menu-card-cta">Começar agora <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
+      </div>
+      <div class="menu-card card-purple" onclick="goTo('registos')">
+        <div class="menu-card-bg"></div>
+        <div class="menu-card-icon">📋</div>
+        <h2>Investigações</h2>
+        <p>Visualize as questões de auditoria organizadas por departamento.</p>
+        <div class="menu-card-cta">Ver detalhes <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4l4 4-4 4"/></svg></div>
       </div>
     </div>
   </div>
@@ -293,11 +314,13 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
               <option value="DCO">DCO — Compras</option>
               <option value="DEN">DEN — Engenharia</option>
               <option value="DATLOG">DATLOG — Pós-Venda (Logística)</option>
-              <option value="DATTECH">DATTECH — Pós-Venda (Tech)</option>
+              <option value="DATTECH">DATTECH — Pós-Venda (Tech Support)</option>
               <option value="DPR">DPR — Produção</option>
               <option value="DLO">DLO — Logística</option>
-              <option value="DSQA">DSQA — Sistema Gestão</option>
+              <option value="DSQA">DSQA — Sistema Gestão Integrado</option>
               <option value="DCM">DCM — Comercial</option>
+              <option value="DGR">DGR — Gestão de Recursos</option>
+              <option value="DGN">DGN — Gestão de Negócio</option>
             </select>
           </div>
           <div class="mfield">
@@ -372,20 +395,6 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
   </div>
 </div>
 
-<!-- QUESTÕES -->
-<div class="view" id="view-questoes">
-  <div class="container">
-    <div class="page-header">
-      <h2>Base de Questões</h2>
-      <p>Gerencie as questões específicas por departamento</p>
-    </div>
-    <div class="toolbar">
-      <button class="btn btn-dark" onclick="openQuestModal()">+ Nova Questão</button>
-    </div>
-    <div id="listaQuestoes"></div>
-  </div>
-</div>
-
 <!-- MODAL: QUESTÃO -->
 <div class="modal-overlay" id="quest-modal" onclick="if(event.target === this) closeQuestModal()">
   <div class="modal">
@@ -404,11 +413,13 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
               <option value="DCO">DCO — Compras</option>
               <option value="DEN">DEN — Engenharia</option>
               <option value="DATLOG">DATLOG — Pós-Venda (Logística)</option>
-              <option value="DATTECH">DATTECH — Pós-Venda (Tech)</option>
+              <option value="DATTECH">DATTECH — Pós-Venda (Tech Support)</option>
               <option value="DPR">DPR — Produção</option>
               <option value="DLO">DLO — Logística</option>
-              <option value="DSQA">DSQA — Sistema Gestão</option>
+              <option value="DSQA">DSQA — Sistema Gestão Integrado</option>
               <option value="DCM">DCM — Comercial</option>
+              <option value="DGR">DGR — Gestão de Recursos</option>
+              <option value="DGN">DGN — Gestão de Negócio</option>
             </select>
           </div>
         </div>
@@ -460,6 +471,23 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
   </div>
 </div>
 
+<!-- REGISTOS -->
+<div class="view" id="view-registos">
+  <div class="container">
+    <div class="page-header">
+      <h2>Investigações</h2>
+      <p>Questões de auditoria por departamento</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-dark" onclick="abrirModalAdicionarPorDepto('')">+ Nova Investigação</button>
+      <button class="btn btn-ghost" onclick="exportarInvestigacoes()">⬇ Exportar</button>
+    </div>
+    <div class="filter-dept" id="filter-dept"></div>
+    <div class="inv-grid" id="inv-grid"></div>
+    <div id="inv-empty" class="empty-state" style="display:none"><div class="ei">📋</div><p>Nenhuma investigação registada.</p></div>
+  </div>
+</div>
+
 <!-- RELATÓRIO -->
 <div class="view" id="view-relatorio">
   <div class="container">
@@ -472,17 +500,32 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
 </div>
 
 <script>
-const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyPohVX4boax0tZ3PphP4TCUoIyMquR44GKsje0Yo3MD_JdpGwRkQ8iBKkZ6EGFkczi/exec';
+const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMY7vVznq4MTxJWaGUDM-klZsdknix40t-SlWIhhXfoh3pjTrsfZvLELgQn_GgEm09/exec';
 
 const DEPARTAMENTOS = {
   'DCO': 'Compras',
   'DEN': 'Engenharia',
   'DATLOG': 'Pós-Venda (Logística)',
-  'DATTECH': 'Pós-Venda (Tech)',
+  'DATTECH': 'Pós-Venda (Tech Support)',
   'DPR': 'Produção',
   'DLO': 'Logística',
-  'DSQA': 'Sistema Gestão Integrada',
-  'DCM': 'Comercial'
+  'DSQA': 'Sistema Gestão Integrado',
+  'DCM': 'Comercial',
+  'DGR': 'Gestão de Recursos',
+  'DGN': 'Gestão de Negócio'
+};
+
+const CORES_DEPARTAMENTOS = {
+  'DCO': { main: '#2563eb', light: '#dbeafe', text: '#1e40af' },     // Azul
+  'DEN': { main: '#f97316', light: '#fed7aa', text: '#9a3412' },     // Laranja
+  'DATLOG': { main: '#10b981', light: '#d1fae5', text: '#065f46' },  // Verde
+  'DATTECH': { main: '#ec4899', light: '#fce7f3', text: '#9d174d' }, // Rosa
+  'DPR': { main: '#ef4444', light: '#fee2e2', text: '#991b1b' },     // Vermelho
+  'DLO': { main: '#f59e0b', light: '#fef3c7', text: '#92400e' },     // Âmbar
+  'DSQA': { main: '#7c3aed', light: '#f5f3ff', text: '#5b21b6' },    // Roxo
+  'DCM': { main: '#06b6d4', light: '#cffafe', text: '#164e63' },     // Ciano
+  'DGR': { main: '#8b5cf6', light: '#f3e8ff', text: '#5b21b6' },     // Violeta
+  'DGN': { main: '#059669', light: '#ecfdf5', text: '#065f46' }      // Verde Escuro
 };
 
 let dados = {
@@ -493,6 +536,7 @@ let dados = {
 };
 
 let deptAtual = null;
+let deptFilterSelected = null; // Para filtro na view registos
 
 function goHome() { goTo('menu'); }
 function goTo(view) {
@@ -500,9 +544,16 @@ function goTo(view) {
   document.getElementById(`view-${view}`).classList.add('active');
   document.getElementById('back-btn').style.display = view === 'menu' ? 'none' : 'flex';
   
-  if (view === 'questoes') renderQuestoes();
+  if (view === 'questoes') {
+    console.log('Renderizando questões...');
+    renderQuestoes();
+  }
   if (view === 'planeamento') renderPlaneamentos();
   if (view === 'selecionar') renderDeptos();
+  if (view === 'registos') {
+    deptFilterSelected = null; // Reset filter
+    renderInvestigacoes();
+  }
 }
 
 // PLANEAMENTO
@@ -596,36 +647,106 @@ function removerIntro(id) {
 }
 
 // QUESTÕES
-function openQuestModal() { document.getElementById('quest-modal').classList.add('open'); }
+function openQuestModal() { 
+  document.getElementById('deptQuestao').value = '';
+  document.getElementById('textoQuestao').value = '';
+  document.getElementById('focoRequisito').value = '';
+  document.getElementById('quest-modal').classList.add('open'); 
+}
+
+function abrirModalAdicionarPorDepto(dept) {
+  document.getElementById('deptQuestao').value = dept;
+  document.getElementById('textoQuestao').value = '';
+  document.getElementById('focoRequisito').value = '';
+  document.getElementById('quest-modal').classList.add('open');
+  document.getElementById('textoQuestao').focus();
+}
+
 function closeQuestModal() { document.getElementById('quest-modal').classList.remove('open'); }
 
 function renderQuestoes() {
   const container = document.getElementById('listaQuestoes');
-  if (dados.questoes.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="ei">🗂️</div><p>Nenhuma questão registada.</p></div>';
+  if (!container) {
+    console.log('Contenedor listaQuestoes não encontrado');
+    return;
+  }
+  
+  console.log('RenderQuestoes - Questões disponíveis:', dados.questoes);
+  
+  // Validar dados
+  if (!dados.questoes || !Array.isArray(dados.questoes) || dados.questoes.length === 0) {
+    console.log('Sem questões para renderizar');
+    container.innerHTML = `<div class="empty-state"><div class="ei">🗂️</div>
+      <p style="margin-bottom:1rem">Nenhuma questão registada.</p>
+      <div style="text-align:left;font-size:13px;color:#666;line-height:1.8;max-width:550px;margin:0 auto">
+        <p style="font-weight:600;margin-bottom:.5rem">💡 Como adicionar questões:</p>
+        <ol style="margin-left:1.5rem;margin-bottom:1rem">
+          <li>Clique no botão <strong>"+ Nova Questão"</strong> acima</li>
+          <li>Selecione o departamento</li>
+          <li>Preencha a questão e o foco</li>
+          <li>Clique <strong>"+ Adicionar"</strong></li>
+        </ol>
+      </div>
+    </div>`;
     return;
   }
 
-  const depts = [...new Set(dados.questoes.map(q => q.departamento))].sort();
-  container.innerHTML = depts.map(dept => {
-    const questoesDept = dados.questoes.filter(q => q.departamento === dept);
-    return `
-      <div style="margin-bottom:2rem">
-        <h3 style="font-size:16px;font-weight:900;margin-bottom:1rem;color:var(--slate800)">${dept} — ${DEPARTAMENTOS[dept]}</h3>
-        <div class="q-list">
-          ${questoesDept.map((q, i) => `
-            <div class="q-card">
-              <div class="q-header">
-                <div class="q-num">Q${i+1}</div>
-                <div class="q-text">${q.questao}</div>
+  try {
+    const depts = [...new Set(dados.questoes.map(q => q.departamento).filter(Boolean))].sort();
+    console.log('Departamentos encontrados:', depts);
+    console.log('Total departamentos:', depts.length);
+    
+    if (depts.length === 0) {
+      console.log('Sem departamentos encontrados');
+      container.innerHTML = '<div class="empty-state"><div class="ei">🗂️</div><p>Nenhuma questão com departamento definido.</p></div>';
+      return;
+    }
+
+    // Log detalhado de cada departamento
+    depts.forEach(dept => {
+      const questoesDept = dados.questoes.filter(q => q && q.departamento === dept);
+      console.log(`  ${dept}: ${questoesDept.length} questões`);
+    });
+
+    container.innerHTML = depts.map(dept => {
+      const questoesDept = dados.questoes.filter(q => q && q.departamento === dept);
+      if (questoesDept.length === 0) return '';
+      
+      console.log(`Renderizando ${dept} com ${questoesDept.length} questões`);
+      
+      return `
+        <div style="margin-bottom:2.5rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+            <h3 style="font-size:16px;font-weight:900;color:var(--slate800);margin:0">${dept} — ${DEPARTAMENTOS[dept] || dept}</h3>
+            <button class="btn btn-ghost" onclick="abrirModalAdicionarPorDepto('${dept}')" style="padding:0.4rem 0.8rem;font-size:12px;white-space:nowrap">
+              + Adicionar
+            </button>
+          </div>
+          <div class="q-list">
+            ${questoesDept.map((q) => {
+              if (!q) return '';
+              const texto = q.investigacao || q.questao || '[Sem texto]';
+              const foco = q.foco || '';
+              return `
+              <div class="q-card">
+                <div class="q-header">
+                  <div class="q-num">${q.id || '?'}</div>
+                  <div class="q-text">${texto}</div>
+                </div>
+                ${foco ? `<div class="q-foco">${foco}</div>` : ''}
               </div>
-              <div class="q-foco">${q.foco}</div>
-            </div>
-          `).join('')}
+            `}).filter(Boolean).join('')}
+          </div>
         </div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).filter(Boolean).join('');
+    
+    console.log('✅ Renderização completada com sucesso');
+  } catch(e) {
+    console.error('Erro ao renderizar questões:', e);
+    console.error('Stack:', e.stack);
+    container.innerHTML = '<div class="empty-state"><div class="ei">⚠️</div><p>Erro ao carregar questões. Verifique a consola.</p></div>';
+  }
 }
 
 async function adicionarQuestao(e) {
@@ -636,20 +757,32 @@ async function adicionarQuestao(e) {
   
   if (!dept || !texto) { alert('Preenche campos obrigatórios'); return; }
   
-  dados.questoes.push({
-    id: 'Q' + (dados.questoes.length + 1),
-    departamento: dept,
-    questao: texto,
-    foco: foco || 'Sem especificação'
-  });
+  // Gerar ID automático (Qxx)
+  const maxId = Math.max(...(dados.questoes?.map(q => {
+    const match = q.id?.match(/Q(\d+)/);
+    return match ? parseInt(match[1]) : 0;
+  }) || [0]));
+  const novoId = 'Q' + (maxId + 1);
   
+  const novaQuestao = {
+    id: novoId,
+    departamento: dept,
+    investigacao: texto,
+    foco: foco || 'Sem especificação'
+  };
+  
+  dados.questoes.push(novaQuestao);
   guardarDados();
   await enviarParaAppScript('adicionarQuestao', { departamento: dept, investigacao: texto, foco });
+  
+  // Recarregar questões do sheet (tenta)
+  await carregarQuestoesDoSheet();
   
   document.getElementById('formQuestao').reset();
   closeQuestModal();
   renderQuestoes();
-  alert('Questão adicionada!');
+  renderInvestigacoes();
+  alert(`✅ Questão "${novoId}" adicionada com sucesso!`);
 }
 
 // DEPARTAMENTOS
@@ -676,6 +809,105 @@ function renderDeptos() {
   `).join('');
 }
 
+// INVESTIGAÇÕES VIEW
+function renderInvestigacoes() {
+  const invGrid = document.getElementById('inv-grid');
+  const invEmpty = document.getElementById('inv-empty');
+  const filterDept = document.getElementById('filter-dept');
+  
+  if (!dados.questoes || dados.questoes.length === 0) {
+    invGrid.innerHTML = '';
+    filterDept.innerHTML = '';
+    invEmpty.style.display = 'flex';
+    return;
+  }
+  
+  invEmpty.style.display = 'none';
+  
+  // Agrupar por departamento
+  const deptoMap = {};
+  dados.questoes.forEach(q => {
+    if (!q.departamento) return;
+    if (!deptoMap[q.departamento]) {
+      deptoMap[q.departamento] = [];
+    }
+    deptoMap[q.departamento].push(q);
+  });
+  
+  // Renderizar botões de filtro COM CORES
+  const deptList = Object.keys(deptoMap).sort();
+  let filterHtml = '<button class="filter-btn' + (deptFilterSelected === null ? ' active' : '') + '" onclick="setDeptFilter(null)">Todos</button>';
+  deptList.forEach(dept => {
+    const count = deptoMap[dept].length;
+    const cores = CORES_DEPARTAMENTOS[dept];
+    const activeClass = deptFilterSelected === dept ? ' active' : '';
+    filterHtml += `<button class="filter-btn${activeClass}" style="--btn-color:${cores.main};--btn-light:${cores.light}" onclick="setDeptFilter('${dept}')">${dept} (${count})</button>`;
+  });
+  filterDept.innerHTML = filterHtml;
+  
+  // Renderizar cards agrupados (com filtro e cores)
+  let html = '';
+  Object.keys(deptoMap).sort().forEach(dept => {
+    // Se temos filtro, pula os departamentos que não são o filtrado
+    if (deptFilterSelected !== null && dept !== deptFilterSelected) {
+      return;
+    }
+    
+    const investigacoes = deptoMap[dept];
+    const cores = CORES_DEPARTAMENTOS[dept];
+    investigacoes.forEach(inv => {
+      const focoText = inv.foco || inv.focoRequisito || 'Sem especificação';
+      html += `
+        <div class="inv-card" style="--card-color:${cores.main}">
+          <div class="inv-header" style="background:linear-gradient(135deg,${cores.main} 0%,${cores.main}dd 100%);color:white">${dept} — ${DEPARTAMENTOS[dept] || ''}</div>
+          <div class="inv-content">
+            <div class="inv-title">${inv.investigacao || inv.questao || inv.textoQuestao || inv.id}</div>
+            ${focoText ? `<div class="inv-foco" style="border-color:${cores.main};color:${cores.main}">${focoText}</div>` : ''}
+          </div>
+          <div class="inv-footer">ID: ${inv.id || '—'}</div>
+        </div>
+      `;
+    });
+  });
+  
+  invGrid.innerHTML = html || '<div class="empty-state" style="grid-column:1/-1"><div class="ei">📋</div><p>Nenhuma investigação neste departamento.</p></div>';
+}
+
+function setDeptFilter(dept) {
+  deptFilterSelected = dept;
+  renderInvestigacoes();
+}
+
+function exportarInvestigacoes() {
+  if (!dados.questoes || dados.questoes.length === 0) {
+    alert('Nenhuma investigação para exportar');
+    return;
+  }
+  
+  // Preparar CSV
+  let csv = 'Departamento,ID,Investigação,Foco/Requisito\n';
+  dados.questoes.forEach(q => {
+    const dept = q.departamento || '';
+    const id = q.id || '';
+    const inv = (q.investigacao || q.questao || '').replace(/"/g, '""');
+    const foco = (q.foco || q.focoRequisito || '').replace(/"/g, '""');
+    csv += `"${dept}","${id}","${inv}","${foco}"\n`;
+  });
+  
+  // Fazer download
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `investigacoes-${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+  
+  alert('✅ Investigações exportadas com sucesso!');
+}
+
 function iniciarAuditoria(dept) {
   deptAtual = dept;
   document.getElementById('audit-title').textContent = DEPARTAMENTOS[dept];
@@ -700,8 +932,8 @@ function renderQuestoesPorDept() {
   container.innerHTML = questoes.map((q, i) => `
     <div class="q-card">
       <div class="q-header">
-        <div class="q-num">Q${i+1}</div>
-        <div class="q-text">${q.questao}</div>
+        <div class="q-num">${q.id}</div>
+        <div class="q-text">${q.investigacao}</div>
       </div>
       <div class="q-foco">${q.foco}</div>
       <div class="q-body">
@@ -732,12 +964,22 @@ async function finalizarAuditoria() {
   const questoes = dados.questoes.filter(q => q.departamento === deptAtual);
   const registos = [];
   
+  // Gerar ID único da auditoria baseado na data
+  const agora = new Date();
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const hora = String(agora.getHours()).padStart(2, '0');
+  const minuto = String(agora.getMinutes()).padStart(2, '0');
+  const segundo = String(agora.getSeconds()).padStart(2, '0');
+  const auditId = `AUD-${ano}${mes}${dia}-${hora}${minuto}${segundo}`;
+  
   questoes.forEach(q => {
     const nc = ncSelecionados[q.id] || 'OK';
     registos.push({
-      id: `AUD-${new Date().toISOString().slice(0,10).replace(/-/g,'')}`,
+      id: auditId,
       departamento: deptAtual,
-      investigacao: q.questao,
+      investigacao: q.investigacao,
       foco: q.foco,
       evidencia: document.getElementById('ev_' + q.id).value,
       om: document.getElementById('om_' + q.id).value,
@@ -747,6 +989,9 @@ async function finalizarAuditoria() {
   
   dados.auditoriasRegistadas.push(...registos);
   guardarDados();
+  
+  // Enviar para AppScript para guardar na folha AUDITORIA
+  await enviarParaAppScript('salvarAuditoria', { registos });
   
   const reportHtml = `
     <div class="report-head">
@@ -786,6 +1031,84 @@ function carregarDados() {
   if (stored) dados = JSON.parse(stored);
 }
 
+// Carregar questões do Google Sheet REGISTOS
+async function carregarQuestoesDoSheet() {
+  console.log('=== INICIANDO CARREGAMENTO DO SHEET ===');
+  console.log('URL do AppScript:', APPSCRIPT_URL);
+  
+  try {
+    const url = APPSCRIPT_URL + '?operacao=obterQuestoes&_t=' + Date.now();
+    console.log('URL final (com cache-break):', url);
+    
+    console.log('Fazendo fetch...');
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      cache: 'no-cache'
+    });
+    
+    console.log('Response recebida:', response);
+    console.log('Status:', response.status);
+    console.log('Headers:', {
+      'content-type': response.headers.get('content-type'),
+      'access-control-allow-origin': response.headers.get('access-control-allow-origin')
+    });
+    
+    if (!response.ok) {
+      console.error('Response não OK:', response.statusText);
+      throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+    }
+    
+    const text = await response.text();
+    console.log('Texto recebido (primeiros 500 chars):', text.substring(0, 500));
+    
+    let questoes;
+    try {
+      questoes = JSON.parse(text);
+    } catch(e) {
+      console.error('Erro ao fazer parse JSON:', e);
+      console.error('Texto recebido completo:', text);
+      throw new Error('Resposta não é JSON válido: ' + e.message);
+    }
+    
+    console.log('✅ Questões recebidas:', questoes);
+    
+    if (questoes && Array.isArray(questoes) && questoes.length > 0) {
+      dados.questoes = questoes;
+      guardarDados();
+      console.log('✅ SUCESSO! Questões carregadas do sheet:', questoes.length, 'questões');
+      return questoes;
+    } else if (Array.isArray(questoes)) {
+      console.warn('Array vazio recebido do sheet');
+      return [];
+    } else if (questoes.erro) {
+      console.error('Erro retornado pelo AppScript:', questoes.erro);
+      throw new Error(questoes.erro);
+    } else {
+      console.warn('Resposta não é um array:', questoes);
+      return [];
+    }
+  } catch(e) {
+    console.error('❌ ERRO FATAL ao carregar do sheet:');
+    console.error('Nome:', e.name);
+    console.error('Mensagem:', e.message);
+    console.error('Stack:', e.stack);
+    
+    if (e.message.includes('CORS')) {
+      console.warn('⚠️ ERRO CORS - O AppScript precisa ser redeployado com headers CORS corretos');
+    } else if (e.message.includes('Failed to fetch')) {
+      console.warn('⚠️ ERRO de Conexão - Verifique se a URL está correcta');
+    }
+    
+    console.log('Utilizando dados do localStorage como fallback');
+  }
+  return dados.questoes || [];
+}
+
 // Envia dados para o AppScript via fetch no-cors com text/plain (sem preflight CORS)
 async function enviarParaAppScript(operacao, dados_) {
   try {
@@ -804,8 +1127,84 @@ async function enviarParaAppScript(operacao, dados_) {
   }
 }
 
+// Adicionar questões de teste (para debug)
+function adicionarTestecnicas() {
+  console.log('Adicionando questões de teste...');
+  dados.questoes = [
+    { id: 'Q1', departamento: 'DCO', investigacao: 'Existe registo de pedidos de compra?', foco: 'Rastreabilidade' },
+    { id: 'Q2', departamento: 'DCO', investigacao: 'Os fornecedores estão aprovados?', foco: 'Qualificação' },
+    { id: 'Q3', departamento: 'DEN', investigacao: 'Os desenhos técnicos estão atualizados?', foco: 'Controlo de Documentos' },
+    { id: 'Q4', departamento: 'DPR', investigacao: 'Existe plano de controlo de qualidade?', foco: 'Inspeção' }
+  ];
+  guardarDados();
+  console.log('Questões de teste adicionadas:', dados.questoes);
+}
+
+// Importar questões pré-definidas de arquivo JSON
+async function importarQuestoesPredefinidas() {
+  console.log('Iniciando importação de questões pré-definidas...');
+  try {
+    const response = await fetch('./questoes-importar.json');
+    if (!response.ok) throw new Error('Não conseguiu carregar arquivo');
+    
+    const questoes = await response.json();
+    console.log('Questões importadas:', questoes);
+    
+    if (Array.isArray(questoes) && questoes.length > 0) {
+      dados.questoes = questoes;
+      guardarDados();
+      console.log('✅ Questões pré-definidas importadas com sucesso!', questoes.length, 'questões');
+      renderQuestoes();
+      renderDeptos();
+      return true;
+    } else {
+      throw new Error('Arquivo de questões vazio');
+    }
+  } catch(e) {
+    console.error('❌ Erro ao importar questões:', e);
+    alert('❌ Erro ao importar questões:\n' + e.message);
+    return false;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOMContentLoaded - Iniciando aplicação');
   carregarDados();
+  console.log('Dados carregados do localStorage:', dados);
+  console.log('Número de questões:', dados.questoes ? dados.questoes.length : 0);
+  
+  // Se não há questões, tenta carregar do sheet PRIMEIRO
+  if (!dados.questoes || dados.questoes.length === 0) {
+    console.log('Sem questões em cache, tentando carregar do Google Sheet...');
+    carregarQuestoesDoSheet().then((questoes) => {
+      console.log('Resultado do carregamento:', questoes);
+      if (questoes && questoes.length > 0) {
+        console.log('✅ Questões carregadas do Sheet com sucesso!');
+        renderQuestoes();
+        renderDeptos();
+        renderInvestigacoes();
+      } else {
+        console.log('Sheet vazio ou erro, carregando pré-definidas...');
+        importarQuestoesPredefinidas().then(() => {
+          renderQuestoes();
+          renderDeptos();
+          renderInvestigacoes();
+        });
+      }
+    });
+  } else {
+    console.log('Questões já em cache, renderizando...');
+    renderQuestoes();
+    renderDeptos();
+    renderInvestigacoes();
+  }
+  
+  // Exposer debug functions to window
+  window.debugAddTestQuestions = adicionarTestecnicas;
+  window.debugShowData = () => console.log('Dados atuais:', dados);
+  window.debugClear = () => { dados.questoes = []; guardarDados(); location.reload(); };
+  window.debugRecarregar = () => carregarQuestoesDoSheet().then(() => { renderQuestoes(); renderDeptos(); });
+  console.log('Funções de debug disponíveis: debugAddTestQuestions(), debugShowData(), debugClear(), debugRecarregar()');
 });
 </script>
 </body>
