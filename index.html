@@ -203,6 +203,12 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
   body{background:white!important}
   .container{padding:2rem!important;max-width:100%!important}
 }
+
+/* BUTTON TOGGLE STYLES */
+.btn-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;padding:.75rem;background:var(--slate50);border-radius:12px;border:1px solid var(--slate100)}
+.btn-toggle{padding:.65rem 1rem;border:2px solid var(--slate200);background:var(--white);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--slate600);font-family:'DM Sans',sans-serif}
+.btn-toggle:hover{border-color:var(--blue);background:var(--blue-light)}
+.btn-toggle.active{background:var(--blue);color:white;border-color:var(--blue);box-shadow:0 4px 12px rgba(37,99,235,.25)}
 </style>
 </head>
 <body>
@@ -338,22 +344,22 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
         <div class="mform-grid full">
           <div class="mfield">
             <label>Documentos de Referência</label>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:.75rem;background:var(--slate50);border-radius:12px;border:1px solid var(--slate100)">
-              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Fluxograma do Processo" style="cursor:pointer"/> Fluxograma do Processo</label>
-              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Procedimento do Processo" style="cursor:pointer"/> Procedimento do Processo</label>
-              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Instruções de Trabalho" style="cursor:pointer"/> Instruções de Trabalho</label>
-              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Instruções Operatórias" style="cursor:pointer"/> Instruções Operatórias</label>
-              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Modelos" style="cursor:pointer"/> Modelos</label>
-              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Manuais" style="cursor:pointer"/> Manuais</label>
+            <div class="btn-group" id="doc-ref-group">
+              <button type="button" class="btn-toggle" data-value="Fluxograma do Processo" onclick="toggleDocRef(this)">Fluxograma do Processo</button>
+              <button type="button" class="btn-toggle" data-value="Procedimento do Processo" onclick="toggleDocRef(this)">Procedimento do Processo</button>
+              <button type="button" class="btn-toggle" data-value="Instruções de Trabalho" onclick="toggleDocRef(this)">Instruções de Trabalho</button>
+              <button type="button" class="btn-toggle" data-value="Instruções Operatórias" onclick="toggleDocRef(this)">Instruções Operatórias</button>
+              <button type="button" class="btn-toggle" data-value="Modelos" onclick="toggleDocRef(this)">Modelos</button>
+              <button type="button" class="btn-toggle" data-value="Manuais" onclick="toggleDocRef(this)">Manuais</button>
             </div>
           </div>
         </div>
         <div class="mform-grid full">
           <div class="mfield">
             <label>Requisitos</label>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:.75rem;background:var(--slate50);border-radius:12px;border:1px solid var(--slate100)">
-              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="requisito" value="ISO 9001" style="cursor:pointer"/> ISO 9001</label>
-              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="requisito" value="ISO 14001" style="cursor:pointer"/> ISO 14001</label>
+            <div class="btn-group" id="requisito-group">
+              <button type="button" class="btn-toggle" data-value="ISO 9001" onclick="toggleRequisito(this)">ISO 9001</button>
+              <button type="button" class="btn-toggle" data-value="ISO 14001" onclick="toggleRequisito(this)">ISO 14001</button>
             </div>
           </div>
         </div>
@@ -466,8 +472,7 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
 </div>
 
 <script>
-const SHEET_ID = '1bMoWDD2mHdzgFtJijQld-GHCcmm9rYpZ996Z2JIOMgk';
-const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxIDIhZAKGbIcr2L4bJeEd__F2p27ly1aOfMJSphggznOEsp-P4ccp-wahyDTHhkLJ/exec';
+const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyPohVX4boax0tZ3PphP4TCUoIyMquR44GKsje0Yo3MD_JdpGwRkQ8iBKkZ6EGFkczi/exec';
 
 const DEPARTAMENTOS = {
   'DCO': 'Compras',
@@ -502,10 +507,11 @@ function goTo(view) {
 
 // PLANEAMENTO
 function openPlanModal() { document.getElementById('plan-modal').classList.add('open'); }
-function closePlanModal(e) { 
-  if (e && e.target !== e.currentTarget) return;
-  document.getElementById('plan-modal').classList.remove('open'); 
-}
+function closePlanModal() { document.getElementById('plan-modal').classList.remove('open'); }
+
+// TOGGLE FUNCTIONS FOR BUTTONS
+function toggleDocRef(btn) { btn.classList.toggle('active'); }
+function toggleRequisito(btn) { btn.classList.toggle('active'); }
 
 async function salvarIntro(e) {
   e.preventDefault();
@@ -516,13 +522,11 @@ async function salvarIntro(e) {
   const sequencia = String(dados.introPlaneamentos.length + 1).padStart(3, '0');
   const idGerado = `AUD-${ano}${mes}${dia}-${sequencia}`;
 
-  // Recolher documentos selecionados
-  const docsChecked = Array.from(document.querySelectorAll('input[name="doc-ref"]:checked'))
-    .map(checkbox => checkbox.value);
+  const docsChecked = Array.from(document.querySelectorAll('#doc-ref-group .btn-toggle.active'))
+    .map(btn => btn.dataset.value);
   
-  // Recolher requisitos selecionados
-  const requisitosChecked = Array.from(document.querySelectorAll('input[name="requisito"]:checked'))
-    .map(checkbox => checkbox.value);
+  const requisitosChecked = Array.from(document.querySelectorAll('#requisito-group .btn-toggle.active'))
+    .map(btn => btn.dataset.value);
 
   const novoIntro = {
     id: idGerado,
@@ -532,7 +536,7 @@ async function salvarIntro(e) {
     auditado: document.getElementById('auditado').value,
     registadoPor: document.getElementById('registadoPor').value,
     colaboradores: document.getElementById('colaboradores').value,
-    documentosReferencia: docsChecked.join('; '),
+    documentosRef: docsChecked.join('; '),
     requisitos: requisitosChecked.join('; '),
     horaPrevista: document.getElementById('horaPrevista').value,
     horaAuditoria: document.getElementById('horaAuditoria').value,
@@ -546,6 +550,7 @@ async function salvarIntro(e) {
   await enviarParaAppScript('salvarIntro', novoIntro);
 
   document.getElementById('formIntro').reset();
+  document.querySelectorAll('#doc-ref-group .btn-toggle, #requisito-group .btn-toggle').forEach(btn => btn.classList.remove('active'));
   closePlanModal();
   renderPlaneamentos();
   alert(`Planeamento guardado! ID: ${idGerado}`);
@@ -575,16 +580,19 @@ function renderPlaneamentos() {
           <button class="btn btn-danger-ghost btn-sm" onclick="removerIntro('${intro.id}')">🗑</button>
         </div>
       </div>
-      ${intro.documentosReferencia ? `<div style="margin-bottom:.75rem"><strong style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--slate400)">Documentos:</strong><p style="font-size:11px;color:var(--slate600);margin:.3rem 0 0 0">${intro.documentosReferencia}</p></div>` : ''}
+      ${intro.documentosRef ? `<div style="margin-bottom:.75rem"><strong style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--slate400)">Documentos:</strong><p style="font-size:11px;color:var(--slate600);margin:.3rem 0 0 0">${intro.documentosRef}</p></div>` : ''}
       ${intro.requisitos ? `<div><strong style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--slate400)">Requisitos:</strong><p style="font-size:11px;color:var(--slate600);margin:.3rem 0 0 0">${intro.requisitos}</p></div>` : ''}
     </div>
   `).join('');
 }
 
 function removerIntro(id) {
-  dados.introPlaneamentos = dados.introPlaneamentos.filter(i => i.id !== id);
-  guardarDados();
-  renderPlaneamentos();
+  if (confirm('Tem a certeza que quer apagar este planeamento?')) {
+    dados.introPlaneamentos = dados.introPlaneamentos.filter(i => i.id !== id);
+    guardarDados();
+    enviarParaAppScript('apagarIntro', { id });
+    renderPlaneamentos();
+  }
 }
 
 // QUESTÕES
@@ -636,7 +644,7 @@ async function adicionarQuestao(e) {
   });
   
   guardarDados();
-  await enviarParaAppScript('adicionarQuestao', { departamento: dept, investigacao: texto, foco: foco });
+  await enviarParaAppScript('adicionarQuestao', { departamento: dept, investigacao: texto, foco });
   
   document.getElementById('formQuestao').reset();
   closeQuestModal();
@@ -778,14 +786,22 @@ function carregarDados() {
   if (stored) dados = JSON.parse(stored);
 }
 
+// Envia dados para o AppScript via fetch no-cors com text/plain (sem preflight CORS)
 async function enviarParaAppScript(operacao, dados_) {
   try {
+    const payload = JSON.stringify({ operacao, ...dados_ });
+    // Enviamos como form-urlencoded dentro de text/plain para evitar preflight
+    // O Apps Script lê via e.postData.contents
     await fetch(APPSCRIPT_URL, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({operacao, ...dados_})
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: payload
     });
-  } catch(e) { console.log('AppScript indisponível'); }
+    console.log('Dados enviados para o Google Sheets:', operacao);
+  } catch(e) {
+    console.warn('Erro ao enviar dados:', e.message);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
