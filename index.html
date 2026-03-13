@@ -337,8 +337,24 @@ table.main-table tr:hover td{background:rgba(248,250,252,.6)}
         </div>
         <div class="mform-grid full">
           <div class="mfield">
+            <label>Documentos de Referência</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:.75rem;background:var(--slate50);border-radius:12px;border:1px solid var(--slate100)">
+              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Fluxograma do Processo" style="cursor:pointer"/> Fluxograma do Processo</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Procedimento do Processo" style="cursor:pointer"/> Procedimento do Processo</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Instruções de Trabalho" style="cursor:pointer"/> Instruções de Trabalho</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Instruções Operatórias" style="cursor:pointer"/> Instruções Operatórias</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Modelos" style="cursor:pointer"/> Modelos</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="doc-ref" value="Manuais" style="cursor:pointer"/> Manuais</label>
+            </div>
+          </div>
+        </div>
+        <div class="mform-grid full">
+          <div class="mfield">
             <label>Requisitos</label>
-            <textarea id="requisitos" placeholder="Requisitos a verificar..."></textarea>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:.75rem;background:var(--slate50);border-radius:12px;border:1px solid var(--slate100)">
+              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="requisito" value="ISO 9001" style="cursor:pointer"/> ISO 9001</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-weight:500;margin:0;cursor:pointer"><input type="checkbox" name="requisito" value="ISO 14001" style="cursor:pointer"/> ISO 14001</label>
+            </div>
           </div>
         </div>
       </form>
@@ -500,6 +516,14 @@ async function salvarIntro(e) {
   const sequencia = String(dados.introPlaneamentos.length + 1).padStart(3, '0');
   const idGerado = `AUD-${ano}${mes}${dia}-${sequencia}`;
 
+  // Recolher documentos selecionados
+  const docsChecked = Array.from(document.querySelectorAll('input[name="doc-ref"]:checked'))
+    .map(checkbox => checkbox.value);
+  
+  // Recolher requisitos selecionados
+  const requisitosChecked = Array.from(document.querySelectorAll('input[name="requisito"]:checked'))
+    .map(checkbox => checkbox.value);
+
   const novoIntro = {
     id: idGerado,
     departamento: document.getElementById('departamento').value,
@@ -508,7 +532,8 @@ async function salvarIntro(e) {
     auditado: document.getElementById('auditado').value,
     registadoPor: document.getElementById('registadoPor').value,
     colaboradores: document.getElementById('colaboradores').value,
-    requisitos: document.getElementById('requisitos').value,
+    documentosReferencia: docsChecked.join('; '),
+    requisitos: requisitosChecked.join('; '),
     horaPrevista: document.getElementById('horaPrevista').value,
     horaAuditoria: document.getElementById('horaAuditoria').value,
     dataAuditoria: document.getElementById('dataAuditoria').value,
@@ -536,10 +561,10 @@ function renderPlaneamentos() {
 
   container.innerHTML = dados.introPlaneamentos.map(intro => `
     <div class="card" style="padding:1.5rem;margin-bottom:1rem">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem">
         <div style="flex:1">
           <div style="font-weight:900;font-size:15px;margin-bottom:.5rem">${intro.id} - ${intro.departamento}</div>
-          <div style="font-size:12px;color:var(--slate500);margin-bottom:.75rem">
+          <div style="font-size:12px;color:var(--slate500)">
             <div><strong>Auditor Coord:</strong> ${intro.auditorCoord}</div>
             <div><strong>Auditor:</strong> ${intro.auditor}</div>
             <div><strong>Data:</strong> ${intro.dataAuditoria} ${intro.horaPrevista}</div>
@@ -550,6 +575,8 @@ function renderPlaneamentos() {
           <button class="btn btn-danger-ghost btn-sm" onclick="removerIntro('${intro.id}')">🗑</button>
         </div>
       </div>
+      ${intro.documentosReferencia ? `<div style="margin-bottom:.75rem"><strong style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--slate400)">Documentos:</strong><p style="font-size:11px;color:var(--slate600);margin:.3rem 0 0 0">${intro.documentosReferencia}</p></div>` : ''}
+      ${intro.requisitos ? `<div><strong style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--slate400)">Requisitos:</strong><p style="font-size:11px;color:var(--slate600);margin:.3rem 0 0 0">${intro.requisitos}</p></div>` : ''}
     </div>
   `).join('');
 }
